@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="card form-card">
+        <h2>Login</h2>
+
+        <form onsubmit="validateLogin(event)">
+            <label>Email</label>
+            <input type="email" id="login-email" placeholder="you@example.com">
+
+            <label>Password</label>
+            <input type="password" id="login-password" placeholder="Enter password">
+
+            <br><br>
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- ERROR MESSAGE -->
+        <div id="login-error"></div>
+
+        <p><br>New user? <a href="signup.html">Create an account</a></p>
+    </div>
+</div>
+
+</body>
+</html>

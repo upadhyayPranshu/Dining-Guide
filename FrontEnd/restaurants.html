@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurants</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <nav>
+            <h1>Restaurants</h1>
+            <button onclick="logout()" class="btn">Logout</button>
+            <a href="index.html">Home</a>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- FILTERS -->
+    <section class="grid">
+        <input type="text" id="searchInput" placeholder="Search restaurant or cuisine">
+
+        <select id="cuisineFilter">
+            <option value="">All Cuisines</option>
+            <option value="Indian">Indian</option>
+            <option value="Chinese">Chinese</option>
+            <option value="Italian">Italian</option>
+        </select>
+
+        <select id="ratingFilter">
+            <option value="">All Ratings</option>
+            <option value="4">4+</option>
+            <option value="5">5</option>
+        </select>
+    </section>
+
+    <!-- RESTAURANTS -->
+    <section class="grid" id="restaurantList">
+        <!-- Loaded from backend -->
+    </section>
+
+</div>
+
+</body>
+</html>
