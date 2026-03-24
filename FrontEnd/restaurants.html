@@ -11,9 +11,12 @@
 <header>
     <div class="container">
         <nav>
-            <h1>Restaurants</h1>
-            <button onclick="logout()" class="btn">Logout</button>
-            <a href="index.html">Home</a>
+            <h1>🍽 Restaurants</h1>
+            <div>
+                <a href="nutrition.html">Nutrition</a>
+                <a href="favorites.html">Favorites</a>
+                <button onclick="logout()" class="btn btn-sm">Logout</button>
+            </div>
         </nav>
     </div>
 </header>
@@ -21,7 +24,7 @@
 <div class="container">
 
     <!-- FILTERS -->
-    <section class="grid">
+    <section class="filter-section">
         <input type="text" id="searchInput" placeholder="Search restaurant or cuisine">
 
         <select id="cuisineFilter">
@@ -29,12 +32,14 @@
             <option value="Indian">Indian</option>
             <option value="Chinese">Chinese</option>
             <option value="Italian">Italian</option>
+            <option value="Mexican">Mexican</option>
+            <option value="Japanese">Japanese</option>
         </select>
 
         <select id="ratingFilter">
             <option value="">All Ratings</option>
-            <option value="4">4+</option>
-            <option value="5">5</option>
+            <option value="4">4+ ⭐</option>
+            <option value="5">5 ⭐</option>
         </select>
     </section>
 
@@ -44,6 +49,8 @@
     </section>
 
 </div>
+
+<footer>© 2025 Dining Guide</footer>
 
 </body>
 </html>

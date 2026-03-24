@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Favorites</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <nav>
+            <h1>❤️ My Favorites</h1>
+            <div>
+                <a href="restaurants.html">Restaurants</a>
+                <a href="nutrition.html">Nutrition</a>
+                <button onclick="logout()" class="btn btn-sm">Logout</button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
+
+    <section>
+        <p>Your favorite restaurants saved for quick access</p>
+    </section>
+
+    <!-- FAVORITES LIST -->
+    <section class="grid" id="favoritesList">
+        <!-- Loaded from backend -->
+    </section>
+
+    <section id="noFavorites" class="card" style="display: none; text-align: center;">
+        <h3>No favorites yet</h3>
+        <p>Browse restaurants and click the ❤️ to save them here</p>
+        <br>
+        <a href="restaurants.html" class="btn">Browse Restaurants</a>
+    </section>
+
+</div>
+
+<footer>© 2025 Dining Guide</footer>
+
+</body>
+</html>
