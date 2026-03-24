@@ -14,7 +14,14 @@ app.use(cors({
 app.use(express.json());
 
 // Serve frontend files
-app.use(express.static(path.join(__dirname, "../FrontEnd")));
+const frontendPath = path.resolve(__dirname, "..", "FrontEnd");
+console.log("Serving frontend from:", frontendPath);
+app.use(express.static(frontendPath));
+
+// Root route
+app.get("/", (req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
+});
 
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/restaurants", require("./routes/restaurants"));
