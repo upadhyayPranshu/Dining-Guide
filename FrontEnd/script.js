@@ -111,6 +111,7 @@ async function validateSignup(event) {
         }, 1500);
 
     } catch (error) {
+        console.error("Login error:", error);
         showError("signup-error", "Backend server not reachable");
     }
 }
@@ -132,6 +133,7 @@ async function validateLogin(event) {
     }
 
     try {
+        console.log("Attempting login to:", `${API_BASE}/auth/login`);
         const response = await fetch(`${API_BASE}/auth/login`, {
             method: "POST",
             headers: {
@@ -140,7 +142,9 @@ async function validateLogin(event) {
             body: JSON.stringify({ email, password })
         });
 
+        console.log("Response status:", response.status);
         const data = await response.json();
+        console.log("Response data:", data);
 
         if (!response.ok) {
             showError("login-error", data.error || "Invalid credentials");
