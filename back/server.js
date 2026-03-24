@@ -14,15 +14,9 @@ app.use(cors({
 app.use(express.json());
 
 // Serve frontend files
-const frontendPath = path.resolve(__dirname, "..", "FrontEnd");
-console.log("Serving frontend from:", frontendPath);
-app.use(express.static(frontendPath));
+app.use(express.static(path.join(__dirname, "../FrontEnd")));
 
-// Root route
-app.get("/", (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
-});
-
+// API routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/restaurants", require("./routes/restaurants"));
 app.use("/api/menu-items", require("./routes/menuItems"));
@@ -30,7 +24,13 @@ app.use("/api/nutrition", require("./routes/nutrition"));
 app.use("/api/favorites", require("./routes/favorites"));
 app.use("/api/reviews", require("./routes/reviews"));
 
+// Fallback for frontend routes
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../FrontEnd/index.html"));
+});
+
 const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    console.log(`Frontend: http://localhost:${PORT}`);
 });
