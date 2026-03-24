@@ -1,12 +1,20 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const connectDB = require("./config/db");
 
 const app = express();
 connectDB();
 
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"]
+}));
 app.use(express.json());
+
+// Serve frontend files
+app.use(express.static(path.join(__dirname, "../FrontEnd")));
 
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/restaurants", require("./routes/restaurants"));
