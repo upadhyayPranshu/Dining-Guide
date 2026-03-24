@@ -152,8 +152,10 @@ async function validateLogin(event) {
         }
 
         localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userId", data.user.id);
-        localStorage.setItem("userName", data.user.name);
+        if (data.user) {
+            localStorage.setItem("userId", data.user.id);
+            localStorage.setItem("userName", data.user.name);
+        }
 
         showError("login-error", "Login successful ✔", "green");
 
@@ -162,6 +164,7 @@ async function validateLogin(event) {
         }, 1000);
 
     } catch (error) {
+        console.error("Login error:", error);
         showError("login-error", "Backend server not reachable");
     }
 }
