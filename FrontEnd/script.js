@@ -145,6 +145,7 @@ async function validateLogin(event) {
         console.log("Response status:", response.status);
         const data = await response.json();
         console.log("Response data:", data);
+        alert("Response: " + JSON.stringify(data));
 
         if (!response.ok) {
             showError("login-error", data.error || "Invalid credentials");
@@ -156,6 +157,8 @@ async function validateLogin(event) {
             localStorage.setItem("userId", data.user.id);
             localStorage.setItem("userName", data.user.name);
         }
+        
+        console.log("Stored userId:", localStorage.getItem("userId"));
 
         showError("login-error", "Login successful ✔", "green");
 
