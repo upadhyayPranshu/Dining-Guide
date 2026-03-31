@@ -2,63 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dining Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dining Guide | Discover Exceptional Flavors</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
 
 <header>
     <div class="container">
         <nav>
-            <h1>🍽 Dining Guide</h1>
-            <div>
-                <a href="login.html">Login</a>
-                <a href="signup.html">Signup</a>
+            <a href="index.html" class="logo">🍽 Dining Guide</a>
+            <div class="nav-links">
+                <a href="restaurants.html">Restaurants</a>
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="signup.html" class="btn">Sign Up</a>
             </div>
         </nav>
     </div>
 </header>
 
-<div class="container">
-
-    <section class="hero">
-        <h2>Discover great places to eat</h2>
-        <p>Find restaurants, track your nutrition, and save your favorites</p>
-    </section>
-
-    <section class="features-grid">
-        <div class="card feature-card">
-            <div class="feature-icon">🍽</div>
-            <h3>Browse Restaurants</h3>
-            <p>Discover restaurants by cuisine, rating, or location</p>
-        </div>
-
-        <div class="card feature-card">
-            <div class="feature-icon">🥗</div>
-            <h3>Track Nutrition</h3>
-            <p>Log your meals and monitor daily calories, protein, carbs & fats</p>
-        </div>
-
-        <div class="card feature-card">
-            <div class="feature-icon">❤️</div>
-            <h3>Save Favorites</h3>
-            <p>Bookmark your favorite restaurants for quick access</p>
-        </div>
-
-        <div class="card feature-card">
-            <div class="feature-icon">⭐</div>
-            <h3>Read Reviews</h3>
-            <p>See what others think and share your own dining experiences</p>
+<main>
+    <section class="hero animate-fade">
+        <div class="container">
+            <h1>Discover your next <br><span style="color: var(--primary)">favorite meal.</span></h1>
+            <p>Explore the finest dining experiences, curated just for you. From street food gems to fine dining excellence.</p>
+            
+            <div class="search-bar">
+                <input type="text" id="homeSearchInput" class="search-input" placeholder="What are you craving today?">
+                <button onclick="handleHomeSearch()" class="btn" style="position: absolute; right: 8px; top: 8px; border-radius: 40px; padding: 0.8rem 2rem;">
+                    Find Food
+                </button>
+            </div>
         </div>
     </section>
 
-    <section style="text-align: center;">
+    <section class="container" style="margin-top: 4rem;">
+        <div class="features-grid">
+            <div class="card feature-card animate-fade">
+                <div class="feature-icon">🍽</div>
+                <h3>Browse Restaurants</h3>
+                <p>Discover restaurants by cuisine, rating, or location</p>
+            </div>
+
+            <div class="card feature-card animate-fade" style="animation-delay: 0.1s">
+                <div class="feature-icon">🥗</div>
+                <h3>Track Nutrition</h3>
+                <p>Log your meals and monitor daily calories, protein, carbs & fats</p>
+            </div>
+
+            <div class="card feature-card animate-fade" style="animation-delay: 0.2s">
+                <div class="feature-icon">❤️</div>
+                <h3>Save Favorites</h3>
+                <p>Bookmark your favorite restaurants for quick access</p>
+            </div>
+
+            <div class="card feature-card animate-fade" style="animation-delay: 0.3s">
+                <div class="feature-icon">⭐</div>
+                <h3>Read Reviews</h3>
+                <p>See what others think and share your own dining experiences</p>
+            </div>
+        </div>
+    </section>
+
+    <section style="text-align: center; margin-top: 4rem;">
         <a href="signup.html" class="btn btn-large">Get Started</a>
     </section>
 
-</div>
+    <section class="container" style="margin-top: 6rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+            <h2>Trending Now</h2>
+            <a href="restaurants.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">View All →</a>
+        </div>
+        
+        <div class="grid" id="featuredList">
+            <!-- Featured cards can be statically placed or dynamically loaded -->
+            <div class="glass-card restaurant-card animate-fade">
+                <div>
+                    <span style="background: var(--accent); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">NEW</span>
+                    <h3 style="margin-top: 1rem; font-size: 1.5rem;">The Golden Grill</h3>
+                    <p>Modern Steakhouse • ⭐⭐⭐⭐⭐</p>
+                </div>
+                <div style="margin-top: 1.5rem">
+                    <a href="restaurants.html" class="btn" style="width: 100%; justify-content: center;">See More</a>
+                </div>
+            </div>
 
-<footer>© 2025 Dining Guide</footer>
+            <div class="glass-card restaurant-card animate-fade" style="animation-delay: 0.2s">
+                <div>
+                    <span style="background: var(--primary); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">POPULAR</span>
+                    <h3 style="margin-top: 1rem; font-size: 1.5rem;">Sushi Zen</h3>
+                    <p>Japanese Fusion • ⭐⭐⭐⭐</p>
+                </div>
+                <div style="margin-top: 1.5rem">
+                    <a href="restaurants.html" class="btn" style="width: 100%; justify-content: center;">See More</a>
+                </div>
+            </div>
+
+            <div class="glass-card restaurant-card animate-fade" style="animation-delay: 0.4s">
+                <div>
+                    <span style="background: var(--secondary); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">TOP RATED</span>
+                    <h3 style="margin-top: 1rem; font-size: 1.5rem;">The Pasta Project</h3>
+                    <p>Authentic Italian • ⭐⭐⭐⭐⭐</p>
+                </div>
+                <div style="margin-top: 1.5rem">
+                    <a href="restaurants.html" class="btn" style="width: 100%; justify-content: center;">See More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer style="margin-top: 6rem; border-top: 1px solid var(--glass-border); padding: 4rem 0;">
+    <div class="container" style="text-align: center;">
+        <p>© 2025 Dining Guide. Crafted with ❤️ for food lovers.</p>
+    </div>
+</footer>
 
 </body>
 </html>

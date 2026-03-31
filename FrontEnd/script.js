@@ -1,39 +1,41 @@
 /* =====================================================
-   LOGIN SESSION CHECK
-   ===================================================== */
-
-/* =====================================================
-   AUTH PROTECTION SYSTEM
+   DINING GUIDE - CORE LOGIC
    ===================================================== */
 
 const API_BASE = "http://localhost:5000/api";
 
+// ---------------------- AUTH PROTECTION ----------------------
 document.addEventListener("DOMContentLoaded", () => {
-
     const protectedPages = ["restaurants.html", "details.html", "nutrition.html", "favorites.html"];
     const currentPage = window.location.pathname.split("/").pop();
 
     if (protectedPages.includes(currentPage)) {
-        const isLoggedIn = localStorage.getItem("isLoggedIn");
-
-        if (!isLoggedIn) {
+        const token = localStorage.getItem("token");
+        if (!token) {
             window.location.replace("login.html");
         }
     }
 });
 
+// ---------------------- HEADER SCROLL EFFECT ----------------------
+window.addEventListener("scroll", () => {
+    const header = document.querySelector("header");
+    if (header) {
+        if (window.scrollY > 50) {
+            header.classList.add("scrolled");
+        } else {
+            header.classList.remove("scrolled");
+        }
+    }
+});
 
-
-/* =====================================================
-   DINING GUIDE - HELPER FUNCTIONS
-   ===================================================== */
-
+// ---------------------- HELPER FUNCTIONS ----------------------
 function isValidEmail(email) {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(email);
 }
 
-function showError(containerId, message, color = "red") {
+function showError(containerId, message, color = "var(--accent)") {
     const box = document.getElementById(containerId);
     if (box) {
         box.textContent = message;
@@ -47,18 +49,11 @@ function clearError(containerId) {
     if (box) box.textContent = "";
 }
 
-function getUserId() {
-    return localStorage.getItem("userId");
-}
-
 function getTodayDate() {
     return new Date().toISOString().split("T")[0];
 }
 
-/* =====================================================
-   SIGNUP → BACKEND
-   ===================================================== */
-
+// ---------------------- AUTH LOGIC ----------------------
 async function validateSignup(event) {
     event.preventDefault();
     clearError("signup-error");
@@ -68,57 +63,32 @@ async function validateSignup(event) {
     const password = document.getElementById("signup-password").value.trim();
     const confirmPassword = document.getElementById("signup-confirm").value.trim();
 
-    if (!name || !email || !password) {
-        showError("signup-error", "All fields are required");
-        return;
-    }
-
-    if (!isValidEmail(email)) {
-        showError("signup-error", "Invalid email format");
-        return;
-    }
-
-    if (password.length < 6) {
-        showError("signup-error", "Password must be at least 6 characters");
-        return;
-    }
-
-    if (password !== confirmPassword) {
-        showError("signup-error", "Passwords do not match");
-        return;
-    }
+    if (!name || !email || !password) return showError("signup-error", "All fields are required");
+    if (!isValidEmail(email)) return showError("signup-error", "Invalid email format");
+    if (password.length < 6) return showError("signup-error", "Password must be at least 6 characters");
+    if (password !== confirmPassword) return showError("signup-error", "Passwords do not match");
 
     try {
         const response = await fetch(`${API_BASE}/auth/signup`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email, password })
         });
-
         const data = await response.json();
 
-        if (!response.ok) {
-            showError("signup-error", data.error || "Signup failed");
-            return;
+        if (!response.ok) return showError("signup-error", data.error || "Signup failed");
+        
+        localStorage.setItem("token", data.token);
+        if (data.user) {
+            localStorage.setItem("userName", data.user.name);
+            localStorage.setItem("userId", data.user.id);
         }
-
-        showError("signup-error", "Signup successful ✔ Redirecting...", "green");
-
-        setTimeout(() => {
-            window.location.href = "login.html";
-        }, 1500);
-
+        showError("signup-error", "Account created! Redirecting...", "#4ade80");
+        setTimeout(() => window.location.href = "restaurants.html", 1500);
     } catch (error) {
-        console.error("Login error:", error);
-        showError("signup-error", "Backend server not reachable");
+        showError("signup-error", "Server currently offline");
     }
 }
-
-/* =====================================================
-   LOGIN → BACKEND
-   ===================================================== */
 
 async function validateLogin(event) {
     event.preventDefault();
@@ -127,112 +97,135 @@ async function validateLogin(event) {
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-password").value.trim();
 
-    if (!email || !password) {
-        showError("login-error", "Email and password required");
-        return;
-    }
+    if (!email || !password) return showError("login-error", "Email and password required");
 
     try {
-        console.log("Attempting login to:", `${API_BASE}/auth/login`);
         const response = await fetch(`${API_BASE}/auth/login`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
         });
-
-        console.log("Response status:", response.status);
         const data = await response.json();
-        console.log("Response data:", data);
-        alert("Response: " + JSON.stringify(data));
 
-        if (!response.ok) {
-            showError("login-error", data.error || "Invalid credentials");
-            return;
-        }
+        if (!response.ok) return showError("login-error", data.error || "Invalid credentials");
 
-        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("token", data.token);
         if (data.user) {
-            localStorage.setItem("userId", data.user.id);
             localStorage.setItem("userName", data.user.name);
+            localStorage.setItem("userId", data.user.id);
         }
-        
-        console.log("Stored userId:", localStorage.getItem("userId"));
-
-        showError("login-error", "Login successful ✔", "green");
-
-        setTimeout(() => {
-            window.location.href = "restaurants.html";
-        }, 1000);
-
+        showError("login-error", "Welcome back!", "#4ade80");
+        setTimeout(() => window.location.href = "restaurants.html", 1000);
     } catch (error) {
-        console.error("Login error:", error);
-        showError("login-error", "Backend server not reachable");
+        showError("login-error", "Server currently offline");
     }
 }
 
-/* =====================================================
-   FETCH RESTAURANTS FROM BACKEND
-   ===================================================== */
+function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userId");
+    window.location.href = "index.html";
+}
 
+// ---------------------- RESTAURANTS LIST ----------------------
 document.addEventListener("DOMContentLoaded", async () => {
+    const list = document.getElementById("restaurantList");
+    if (!list) return;
 
-    const restaurantList = document.getElementById("restaurantList");
-    if (!restaurantList) return;
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+
+    // Check for search query in URL (from home page)
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialQuery = urlParams.get("search") || "";
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) searchInput.value = initialQuery;
 
     try {
-        const response = await fetch(`${API_BASE}/restaurants`);
-        const restaurants = await response.json();
-        const userId = getUserId();
+        const response = await fetch(`${API_BASE}/restaurants`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
 
-        restaurantList.innerHTML = "";
-
-        for (const rest of restaurants) {
-            let isFav = false;
-            if (userId) {
-                try {
-                    const favRes = await fetch(`${API_BASE}/favorites/check/${userId}/${rest._id}`);
-                    const favData = await favRes.json();
-                    isFav = favData.isFavorite;
-                } catch (e) {}
-            }
-
-            const card = document.createElement("div");
-            card.className = "card restaurant";
-
-            card.dataset.id = rest._id;
-            card.dataset.name = rest.name.toLowerCase();
-            card.dataset.cuisine = rest.cuisine.toLowerCase();
-            card.dataset.rating = rest.rating;
-
-            card.innerHTML = `
-                <div class="card-header">
-                    <h3>${rest.name}</h3>
-                    <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleRestaurantFavorite('${rest._id}', this)">
-                        ${isFav ? '❤️' : '♡'}
-                    </button>
-                </div>
-                <p>${rest.cuisine} • ${"⭐".repeat(rest.rating)}</p>
-                <br>
-                <a href="details.html?id=${rest._id}" class="btn">View Details</a>
-            `;
-
-            restaurantList.appendChild(card);
+        if (response.status === 401) {
+            logout();
+            return;
         }
 
+        const restaurants = await response.json();
+
+        async function renderList(query = "", cuisine = "", rating = "") {
+            list.innerHTML = "";
+            const filtered = restaurants.filter(r => {
+                const matchSearch = r.name.toLowerCase().includes(query.toLowerCase()) || 
+                                   r.cuisine.toLowerCase().includes(query.toLowerCase());
+                const matchCuisine = cuisine === "" || r.cuisine.toLowerCase() === cuisine.toLowerCase();
+                const matchRating = rating === "" || r.rating >= parseInt(rating);
+                return matchSearch && matchCuisine && matchRating;
+            });
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="glass-card animate-fade" style="grid-column: 1/-1">No restaurants found matching your criteria.</div>`;
+                return;
+            }
+
+            for(const r of filtered) {
+                // Check favorite status for each restaurant
+                let isFav = false;
+                if (userId) {
+                    try {
+                        const favRes = await fetch(`${API_BASE}/favorites/check/${userId}/${r._id}`, {
+                            headers: { "Authorization": `Bearer ${token}` }
+                        });
+                        const favData = await favRes.json();
+                        isFav = favData.isFavorite;
+                    } catch (e) {}
+                }
+
+                const card = document.createElement("div");
+                card.className = "glass-card restaurant-card animate-fade";
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${r.name}</h3>
+                            <p style="color: var(--text-muted)">${r.cuisine} • Rating: ${"⭐".repeat(r.rating)}</p>
+                        </div>
+                        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleRestaurantFavorite('${r._id}', this)" style="font-size: 1.5rem;">
+                            ${isFav ? '❤️' : '♡'}
+                        </button>
+                    </div>
+                    <div style="margin-top: 1.5rem">
+                        <a href="details.html?id=${r._id}" class="btn" style="width: 100%; justify-content: center;">View Details</a>
+                    </div>
+                `;
+                list.appendChild(card);
+            }
+        }
+
+        // Initial render
+        renderList(initialQuery);
+
+        // Listen for filter changes
+        const cuisineFilter = document.getElementById("cuisineFilter");
+        const ratingFilter = document.getElementById("ratingFilter");
+
+        const updateFilters = () => renderList(searchInput.value, cuisineFilter.value, ratingFilter.value);
+        
+        if (searchInput) searchInput.addEventListener("input", updateFilters);
+        if (cuisineFilter) cuisineFilter.addEventListener("change", updateFilters);
+        if (ratingFilter) ratingFilter.addEventListener("change", updateFilters);
+
     } catch (err) {
-        restaurantList.innerHTML = "<p>Unable to load restaurants</p>";
+        list.innerHTML = `<p>Error connecting to backend: ${err.message}</p>`;
     }
 });
 
-/* =====================================================
-   TOGGLE FAVORITE ON RESTAURANT LIST
-   ===================================================== */
-
+// ---------------------- FAVORITE LOGIC ----------------------
 async function toggleRestaurantFavorite(restaurantId, btn) {
-    const userId = getUserId();
-    if (!userId) {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    
+    if (!token || !userId) {
         alert("Please login to add favorites");
         return;
     }
@@ -242,14 +235,18 @@ async function toggleRestaurantFavorite(restaurantId, btn) {
     try {
         if (isActive) {
             await fetch(`${API_BASE}/favorites/${userId}/${restaurantId}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
             });
             btn.classList.remove("active");
             btn.innerHTML = "♡";
         } else {
             await fetch(`${API_BASE}/favorites`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}` 
+                },
                 body: JSON.stringify({ userId, restaurantId })
             });
             btn.classList.add("active");
@@ -260,99 +257,62 @@ async function toggleRestaurantFavorite(restaurantId, btn) {
     }
 }
 
-/* =====================================================
-   SEARCH & FILTER
-   ===================================================== */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    const searchInput = document.getElementById("searchInput");
-    const cuisineFilter = document.getElementById("cuisineFilter");
-    const ratingFilter = document.getElementById("ratingFilter");
-
-    if (!searchInput || !cuisineFilter || !ratingFilter) return;
-
-    function filterRestaurants() {
-        const searchValue = searchInput.value.toLowerCase();
-        const cuisineValue = cuisineFilter.value.toLowerCase();
-        const ratingValue = ratingFilter.value;
-
-        const restaurants = document.querySelectorAll(".restaurant");
-
-        restaurants.forEach(rest => {
-            const name = rest.dataset.name;
-            const cuisine = rest.dataset.cuisine;
-            const rating = rest.dataset.rating;
-
-            const matchSearch =
-                name.includes(searchValue) || cuisine.includes(searchValue);
-
-            const matchCuisine =
-                cuisineValue === "" || cuisine === cuisineValue;
-
-            const matchRating =
-                ratingValue === "" || rating >= ratingValue;
-
-            rest.style.display =
-                matchSearch && matchCuisine && matchRating ? "block" : "none";
-        });
+// ---------------------- HOME SEARCH REDIRECTION ----------------------
+function handleHomeSearch() {
+    const input = document.getElementById("homeSearchInput");
+    if (input) {
+        const query = input.value.trim();
+        window.location.href = `restaurants.html?search=${encodeURIComponent(query)}`;
     }
-
-    searchInput.addEventListener("input", filterRestaurants);
-    cuisineFilter.addEventListener("change", filterRestaurants);
-    ratingFilter.addEventListener("change", filterRestaurants);
-});
-
-/* =====================================================
-   LOGOUT
-   ===================================================== */
-
-function logout() {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    window.location.href = "login.html";
 }
 
-/* =====================================================
-   RESTAURANT DETAILS PAGE
-   ===================================================== */
-
+// ---------------------- RESTAURANT DETAILS ----------------------
 let currentRestaurantId = null;
 let currentRating = 0;
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const restaurantName = document.getElementById("restaurantName");
-    if (!restaurantName) return;
+    const detailsContainer = document.getElementById("restaurantDetails");
+    if (!detailsContainer) return;
 
+    const token = localStorage.getItem("token");
     const urlParams = new URLSearchParams(window.location.search);
     currentRestaurantId = urlParams.get("id");
 
     if (!currentRestaurantId) {
-        restaurantName.textContent = "Restaurant not found";
+        detailsContainer.innerHTML = "<h2>No restaurant ID provided.</h2>";
         return;
     }
 
-    await loadRestaurantDetails();
-    await loadMenuItems();
-    await loadReviews();
-    await checkFavoriteStatus();
-});
-
-async function loadRestaurantDetails() {
     try {
-        const response = await fetch(`${API_BASE}/restaurants/${currentRestaurantId}`);
-        const restaurant = await response.json();
+        const response = await fetch(`${API_BASE}/restaurants/${currentRestaurantId}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
 
-        document.getElementById("restaurantName").textContent = restaurant.name;
-        document.getElementById("restaurantCuisine").textContent = restaurant.cuisine;
-        document.getElementById("restaurantRating").textContent = "⭐".repeat(restaurant.rating);
-        document.getElementById("restaurantAddress").textContent = restaurant.address || "Address not available";
-        document.title = restaurant.name + " - Dining Guide";
+        if (response.status === 401) {
+            logout();
+            return;
+        }
+
+        const rest = await response.json();
+        if (!response.ok) throw new Error(rest.error || "Failed to fetch");
+
+        // Set Basic Info
+        document.getElementById("restName").textContent = rest.name;
+        document.getElementById("restCuisine").textContent = rest.cuisine;
+        document.getElementById("restRating").textContent = "⭐".repeat(rest.rating);
+        document.getElementById("restAddress").textContent = rest.address || "123 Gourmet Street, Food City";
+        document.getElementById("restHours").textContent = rest.hours || "11:00 AM - 10:00 PM";
+        document.title = rest.name + " - Dining Guide";
+
+        // Load Menu, Reviews, Favorites
+        await loadMenuItems();
+        await loadReviews();
+        await checkFavoriteStatus();
+
     } catch (err) {
-        console.error("Failed to load restaurant details");
+        detailsContainer.innerHTML = `<h2>Error: ${err.message}</h2>`;
     }
-}
+});
 
 async function loadMenuItems() {
     const menuList = document.getElementById("menuList");
@@ -360,27 +320,31 @@ async function loadMenuItems() {
     if (!menuList) return;
 
     try {
-        const response = await fetch(`${API_BASE}/menu-items/restaurant/${currentRestaurantId}`);
+        const response = await fetch(`${API_BASE}/menu-items/restaurant/${currentRestaurantId}`, {
+            headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+        });
         const items = await response.json();
 
-        if (items.length === 0) {
+        if (!items || items.length === 0) {
             menuList.style.display = "none";
-            noMenu.style.display = "block";
+            if (noMenu) noMenu.style.display = "block";
             return;
         }
 
+        menuList.style.display = "grid";
+        if (noMenu) noMenu.style.display = "none";
+        
         menuList.innerHTML = items.map(item => `
-            <div class="menu-item">
-                <div class="menu-item-header">
-                    <h4>${item.name} ${item.isVegetarian ? '🌱' : ''}</h4>
-                    <span class="price">₹${item.price || '-'}</span>
+            <div class="menu-item animate-fade">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                    <h4 style="font-size: 1.25rem;">${item.name} ${item.isVegetarian ? '🌱' : ''}</h4>
+                    <span style="font-weight: 700; color: var(--primary);">₹${item.price || '-'}</span>
                 </div>
-                <p class="menu-desc">${item.description || ''}</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">${item.description || ''}</p>
                 <div class="nutrition-info">
-                    <span>🔥 ${item.nutrition.calories} cal</span>
-                    <span>🥩 ${item.nutrition.protein}g protein</span>
-                    <span>🍞 ${item.nutrition.carbs}g carbs</span>
-                    <span>🧈 ${item.nutrition.fats}g fats</span>
+                    <span style="background: rgba(var(--primary-rgb), 0.1); padding: 0.25rem 0.5rem; border-radius: 4px;">🔥 ${item.nutrition.calories} cal</span>
+                    <span style="background: rgba(var(--secondary-rgb), 0.1); padding: 0.25rem 0.5rem; border-radius: 4px;">🥩 ${item.nutrition.protein}g</span>
+                    <span style="background: rgba(255, 100, 100, 0.1); padding: 0.25rem 0.5rem; border-radius: 4px;">🍞 ${item.nutrition.carbs}g</span>
                 </div>
             </div>
         `).join("");
@@ -395,10 +359,15 @@ async function loadReviews() {
     if (!reviewsList) return;
 
     try {
-        const response = await fetch(`${API_BASE}/reviews/restaurant/${currentRestaurantId}`);
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${API_BASE}/reviews/restaurant/${currentRestaurantId}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
         const reviews = await response.json();
 
-        const ratingRes = await fetch(`${API_BASE}/reviews/rating/${currentRestaurantId}`);
+        const ratingRes = await fetch(`${API_BASE}/reviews/rating/${currentRestaurantId}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
         const ratingData = await ratingRes.json();
 
         document.getElementById("avgRating").textContent = ratingData.avgRating || "0";
@@ -407,31 +376,30 @@ async function loadReviews() {
         const avgNum = parseFloat(ratingData.avgRating) || 0;
         document.getElementById("avgStars").textContent = "★".repeat(Math.round(avgNum)) + "☆".repeat(5 - Math.round(avgNum));
 
-        if (reviews.length === 0) {
+        if (!reviews || reviews.length === 0) {
             reviewsList.style.display = "none";
-            noReviews.style.display = "block";
+            if (noReviews) noReviews.style.display = "block";
             return;
         }
 
         reviewsList.innerHTML = reviews.map(review => `
-            <div class="review-item">
-                <div class="review-header">
-                    <strong>${review.userId?.name || 'Anonymous'}</strong>
-                    <span class="review-rating">${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</span>
+            <div class="review-item animate-fade">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <strong style="font-size: 1.1rem;">${review.userId?.name || 'Anonymous'}</strong>
+                    <span style="color: var(--accent);">${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</span>
                 </div>
-                <p>${review.comment}</p>
-                <small>${new Date(review.createdAt).toLocaleDateString()}</small>
+                <p style="color: var(--text); margin-bottom: 0.5rem;">${review.comment}</p>
+                <small style="color: var(--text-muted);">${new Date(review.createdAt).toLocaleDateString()}</small>
             </div>
         `).join("");
         
-        reviewsList.style.display = "block";
-        noReviews.style.display = "none";
+        reviewsList.style.display = "grid";
+        if (noReviews) noReviews.style.display = "none";
     } catch (err) {
         reviewsList.innerHTML = "<p>Unable to load reviews</p>";
     }
 }
 
-/* Star Rating for Review Form */
 function setRating(rating) {
     currentRating = rating;
     document.getElementById("ratingValue").value = rating;
@@ -444,9 +412,10 @@ function setRating(rating) {
 
 async function submitReview(event) {
     event.preventDefault();
-    const userId = getUserId();
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
     
-    if (!userId) {
+    if (!token || !userId) {
         showError("reviewError", "Please login to submit a review");
         return;
     }
@@ -467,7 +436,10 @@ async function submitReview(event) {
     try {
         const response = await fetch(`${API_BASE}/reviews`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` 
+            },
             body: JSON.stringify({
                 userId,
                 restaurantId: currentRestaurantId,
@@ -487,13 +459,15 @@ async function submitReview(event) {
     }
 }
 
-/* Favorite Toggle on Details Page */
 async function checkFavoriteStatus() {
-    const userId = getUserId();
-    if (!userId || !currentRestaurantId) return;
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    if (!token || !userId || !currentRestaurantId) return;
 
     try {
-        const response = await fetch(`${API_BASE}/favorites/check/${userId}/${currentRestaurantId}`);
+        const response = await fetch(`${API_BASE}/favorites/check/${userId}/${currentRestaurantId}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
         const data = await response.json();
         updateFavoriteButton(data.isFavorite);
     } catch (err) {}
@@ -506,16 +480,17 @@ function updateFavoriteButton(isFavorite) {
 
     if (isFavorite) {
         btn.classList.add("active");
-        icon.textContent = "❤️";
+        if (icon) icon.textContent = "❤️";
     } else {
         btn.classList.remove("active");
-        icon.textContent = "♡";
+        if (icon) icon.textContent = "♡";
     }
 }
 
 async function toggleFavorite() {
-    const userId = getUserId();
-    if (!userId) {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    if (!token || !userId) {
         alert("Please login to add favorites");
         return;
     }
@@ -526,13 +501,17 @@ async function toggleFavorite() {
     try {
         if (isActive) {
             await fetch(`${API_BASE}/favorites/${userId}/${currentRestaurantId}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
             });
             updateFavoriteButton(false);
         } else {
             await fetch(`${API_BASE}/favorites`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}` 
+                },
                 body: JSON.stringify({ userId, restaurantId: currentRestaurantId })
             });
             updateFavoriteButton(true);
@@ -542,22 +521,22 @@ async function toggleFavorite() {
     }
 }
 
-/* =====================================================
-   FAVORITES PAGE
-   ===================================================== */
-
+// ---------------------- FAVORITES PAGE ----------------------
 document.addEventListener("DOMContentLoaded", async () => {
     const favoritesList = document.getElementById("favoritesList");
     if (!favoritesList) return;
 
-    const userId = getUserId();
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
     if (!userId) return;
 
     try {
-        const response = await fetch(`${API_BASE}/favorites/user/${userId}`);
+        const response = await fetch(`${API_BASE}/favorites/user/${userId}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
         const favorites = await response.json();
 
-        if (favorites.length === 0) {
+        if (!favorites || favorites.length === 0) {
             favoritesList.style.display = "none";
             document.getElementById("noFavorites").style.display = "block";
             return;
@@ -567,14 +546,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             const rest = fav.restaurantId;
             if (!rest) return "";
             return `
-                <div class="card restaurant">
-                    <div class="card-header">
-                        <h3>${rest.name}</h3>
-                        <button class="fav-btn active" onclick="removeFavorite('${rest._id}', this)">❤️</button>
+                <div class="glass-card restaurant-card animate-fade">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${rest.name}</h3>
+                            <p style="color: var(--text-muted)">${rest.cuisine} • ⭐${rest.rating}</p>
+                        </div>
+                        <button class="fav-btn active" onclick="removeFavorite('${rest._id}', this)" style="font-size: 1.5rem;">❤️</button>
                     </div>
-                    <p>${rest.cuisine} • ${"⭐".repeat(rest.rating)}</p>
-                    <br>
-                    <a href="details.html?id=${rest._id}" class="btn">View Details</a>
+                    <div style="margin-top: 1.5rem">
+                        <a href="details.html?id=${rest._id}" class="btn" style="width: 100%; justify-content: center;">View Details</a>
+                    </div>
                 </div>
             `;
         }).join("");
@@ -584,12 +566,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function removeFavorite(restaurantId, btn) {
-    const userId = getUserId();
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
     try {
         await fetch(`${API_BASE}/favorites/${userId}/${restaurantId}`, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` }
         });
-        btn.closest(".card").remove();
+        btn.closest(".glass-card").remove();
         
         const favoritesList = document.getElementById("favoritesList");
         if (favoritesList && favoritesList.children.length === 0) {
@@ -601,10 +585,7 @@ async function removeFavorite(restaurantId, btn) {
     }
 }
 
-/* =====================================================
-   NUTRITION TRACKER PAGE
-   ===================================================== */
-
+// ---------------------- NUTRITION TRACKER PAGE ----------------------
 let selectedDate = getTodayDate();
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -633,11 +614,14 @@ function changeDate(days) {
 }
 
 async function loadNutritionData() {
-    const userId = getUserId();
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
     if (!userId) return;
 
     try {
-        const response = await fetch(`${API_BASE}/nutrition/daily/${userId}/${selectedDate}`);
+        const response = await fetch(`${API_BASE}/nutrition/daily/${userId}/${selectedDate}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
         const data = await response.json();
 
         document.getElementById("totalCalories").textContent = data.totalCalories;
@@ -660,89 +644,96 @@ function updateProgressBars(data) {
     const carbPercent = Math.min((data.totalCarbs / goals.carbs) * 100, 100);
     const fatPercent = Math.min((data.totalFats / goals.fats) * 100, 100);
 
-    document.getElementById("caloriesProgress").style.width = calPercent + "%";
-    document.getElementById("proteinProgress").style.width = protPercent + "%";
-    document.getElementById("carbsProgress").style.width = carbPercent + "%";
-    document.getElementById("fatsProgress").style.width = fatPercent + "%";
+    const cp = document.getElementById("caloriesProgress");
+    const pp = document.getElementById("proteinProgress");
+    const cbp = document.getElementById("carbsProgress");
+    const fp = document.getElementById("fatsProgress");
 
-    document.getElementById("caloriesPercent").textContent = Math.round(calPercent) + "%";
-    document.getElementById("proteinPercent").textContent = Math.round(protPercent) + "%";
-    document.getElementById("carbsPercent").textContent = Math.round(carbPercent) + "%";
-    document.getElementById("fatsPercent").textContent = Math.round(fatPercent) + "%";
+    if (cp) cp.style.width = calPercent + "%";
+    if (pp) pp.style.width = protPercent + "%";
+    if (cbp) cbp.style.width = carbPercent + "%";
+    if (fp) fp.style.width = fatPercent + "%";
+
+    const cper = document.getElementById("caloriesPercent");
+    const pper = document.getElementById("proteinPercent");
+    if (cper) cper.textContent = Math.round(calPercent) + "%";
+    if (pper) pper.textContent = Math.round(protPercent) + "%";
 }
 
-function updateMealLists(meals) {
-    const mealTypes = {
-        Breakfast: "breakfastList",
-        Lunch: "lunchList",
-        Dinner: "dinnerList",
-        Snack: "snackList"
-    };
-
-    for (const [type, listId] of Object.entries(mealTypes)) {
-        const list = document.getElementById(listId);
-        if (!list) continue;
-
-        const items = meals[type] || [];
-        
-        if (items.length === 0) {
-            list.innerHTML = '<p class="empty-meal">No items logged</p>';
-        } else {
-            list.innerHTML = items.map(item => `
-                <div class="meal-item">
-                    <div class="meal-item-info">
-                        <strong>${item.foodName}</strong>
-                        <span>${item.nutrition.calories} cal</span>
-                    </div>
-                    <button class="delete-btn" onclick="deleteMeal('${item._id}')">×</button>
-                </div>
-            `).join("");
-        }
-    }
-}
-
-async function logMeal(event) {
+async function addMeal(event) {
     event.preventDefault();
-    const userId = getUserId();
-    if (!userId) {
-        alert("Please login to log meals");
-        return;
-    }
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
 
-    const mealType = document.getElementById("mealType").value;
-    const foodName = document.getElementById("foodName").value.trim();
-    const calories = parseInt(document.getElementById("inputCalories").value) || 0;
-    const protein = parseInt(document.getElementById("inputProtein").value) || 0;
-    const carbs = parseInt(document.getElementById("inputCarbs").value) || 0;
-    const fats = parseInt(document.getElementById("inputFats").value) || 0;
+    const name = document.getElementById("mealName").value.trim();
+    const calories = parseInt(document.getElementById("mealCalories").value);
+    const protein = parseInt(document.getElementById("mealProtein").value) || 0;
+    const carbs = parseInt(document.getElementById("mealCarbs").value) || 0;
+    const fats = parseInt(document.getElementById("mealFats").value) || 0;
+    const type = document.getElementById("mealType").value;
+
+    if (!name || isNaN(calories)) return;
 
     try {
-        await fetch(`${API_BASE}/nutrition`, {
+        const response = await fetch(`${API_BASE}/nutrition`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` 
+            },
             body: JSON.stringify({
                 userId,
                 date: selectedDate,
-                mealType,
-                foodName,
-                nutrition: { calories, protein, carbs, fats, fiber: 0 }
+                name,
+                calories,
+                protein,
+                carbs,
+                fats,
+                type
             })
         });
 
-        document.getElementById("mealForm").reset();
-        loadNutritionData();
+        if (response.ok) {
+            document.getElementById("addMealForm").reset();
+            loadNutritionData();
+        }
     } catch (err) {
-        console.error("Failed to log meal");
+        console.error("Failed to add meal");
     }
 }
 
 async function deleteMeal(mealId) {
+    const token = localStorage.getItem("token");
     try {
         await fetch(`${API_BASE}/nutrition/${mealId}`, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` }
         });
         loadNutritionData();
     } catch (err) {
         console.error("Failed to delete meal");
     }
+}
+
+function updateMealLists(meals) {
+    const types = ["Breakfast", "Lunch", "Dinner", "Snacks"];
+    types.forEach(type => {
+        const list = document.getElementById(type.toLowerCase() + "List");
+        if (!list) return;
+
+        const filtered = meals.filter(m => m.type === type);
+        if (filtered.length === 0) {
+            list.innerHTML = `<p class="empty-meal">No ${type.toLowerCase()} logged</p>`;
+        } else {
+            list.innerHTML = filtered.map(m => `
+                <div class="meal-item">
+                    <div class="meal-item-info">
+                        <strong>${m.name}</strong>
+                        <span>${m.calories} cal | P: ${m.protein}g C: ${m.carbs}g F: ${m.fats}g</span>
+                    </div>
+                    <button class="delete-btn" onclick="deleteMeal('${m._id}')">×</button>
+                </div>
+            `).join("");
+        }
+    });
 }

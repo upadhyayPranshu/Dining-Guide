@@ -2,95 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Restaurant Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Details | Dining Guide</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body>
 
-<header>
+<header class="scrolled">
     <div class="container">
         <nav>
-            <h1 id="restaurantName">Loading...</h1>
-            <div>
+            <a href="index.html" class="logo">🍽 Dining Guide</a>
+            <div class="nav-links">
                 <button id="favoriteBtn" class="btn btn-outline" onclick="toggleFavorite()">
                     <span id="favoriteIcon">♡</span> Favorite
                 </button>
-                <a href="restaurants.html">Back</a>
+                <a href="restaurants.html" class="btn">Back to List</a>
             </div>
         </nav>
     </div>
 </header>
 
-<div class="container">
-
-    <!-- Restaurant Info -->
-    <div class="grid">
-        <div class="card">
-            <h2>Restaurant Info</h2>
-            <p><strong>Cuisine:</strong> <span id="restaurantCuisine">-</span></p>
-            <p><strong>Rating:</strong> <span id="restaurantRating">-</span></p>
-            <p><strong>Hours:</strong> 10 AM – 10 PM</p>
-            <p><strong>Address:</strong> <span id="restaurantAddress">-</span></p>
-        </div>
-
-        <div class="card">
-            <h2>Average Rating</h2>
-            <div class="rating-display">
-                <span class="big-rating" id="avgRating">0</span>
-                <span class="rating-stars" id="avgStars">☆☆☆☆☆</span>
-            </div>
-            <p id="reviewCount">0 reviews</p>
-        </div>
+<main class="container animate-fade" id="restaurantDetails">
+    <div style="margin-bottom: 3rem; margin-top: 3rem;">
+        <h1 id="restName" style="font-size: 3.5rem; margin-bottom: 0.5rem;">Loading...</h1>
+        <p style="font-size: 1.25rem; color: var(--text-muted)">
+            <span id="restCuisine">Cuisine</span> • <span id="restRating">⭐⭐⭐⭐</span>
+        </p>
     </div>
 
-    <!-- Menu Section -->
-    <section class="card">
-        <h2>📋 Menu</h2>
-        <div id="menuList" class="menu-grid">
-            <!-- Menu items loaded here -->
-        </div>
-        <div id="noMenu" style="display: none;">
-            <p>No menu items available yet</p>
-        </div>
-    </section>
-
-    <!-- Add Review Section -->
-    <section class="card">
-        <h2>✍️ Write a Review</h2>
-        <form id="reviewForm" onsubmit="submitReview(event)">
-            <label>Your Rating</label>
-            <div class="star-rating" id="starRating">
-                <span onclick="setRating(1)">☆</span>
-                <span onclick="setRating(2)">☆</span>
-                <span onclick="setRating(3)">☆</span>
-                <span onclick="setRating(4)">☆</span>
-                <span onclick="setRating(5)">☆</span>
+    <div class="grid" style="grid-template-columns: 2fr 1fr; align-items: start; gap: 2rem;">
+        <div style="display: grid; gap: 2rem;">
+            <!-- Info Card -->
+            <div class="glass-card">
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h3 style="margin-bottom: 1rem; color: var(--primary);">Quick Info</h3>
+                        <p><strong>🕒 Hours:</strong> <span id="restHours">Loading...</span></p>
+                        <p style="margin-top: 0.5rem;"><strong>📍 Address:</strong> <br><span id="restAddress">Loading...</span></p>
+                    </div>
+                    <div style="text-align: right;">
+                        <h3 style="margin-bottom: 1rem;">Average Rating</h3>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);" id="avgRating">0</div>
+                        <div style="color: var(--accent);" id="avgStars">☆☆☆☆☆</div>
+                        <p id="reviewCount" style="font-size: 0.9rem; color: var(--text-muted);">0 reviews</p>
+                    </div>
+                </div>
             </div>
-            <input type="hidden" id="ratingValue" value="0">
-            <br>
-            <label>Your Comment</label>
-            <textarea id="reviewComment" rows="3" placeholder="Share your experience..."></textarea>
-            <br><br>
-            <button type="submit">Submit Review</button>
-            <div id="reviewError"></div>
-        </form>
-    </section>
 
-    <!-- Reviews List -->
-    <section class="card">
-        <h2>💬 Reviews</h2>
-        <div id="reviewsList">
-            <!-- Reviews loaded here -->
+            <!-- Menu Section -->
+            <div class="glass-card">
+                <h2 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">📋 Our Menu</h2>
+                <div id="menuList" class="menu-grid" style="display: grid; gap: 1.5rem;">
+                    <!-- Menu items loaded here -->
+                </div>
+                <div id="noMenu" style="display: none; padding: 2rem; text-align: center;">
+                    <p>No menu items available yet.</p>
+                </div>
+            </div>
+
+            <!-- Reviews List -->
+            <div class="glass-card">
+                <h2 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">💬 Customer Reviews</h2>
+                <div id="reviewsList" style="display: grid; gap: 1.5rem;">
+                    <!-- Reviews loaded here -->
+                </div>
+                <div id="noReviews" style="display: none; padding: 2rem; text-align: center;">
+                    <p>No reviews yet. Be the first to share your experience!</p>
+                </div>
+            </div>
         </div>
-        <div id="noReviews" style="display: none;">
-            <p>No reviews yet. Be the first to review!</p>
+
+        <div style="display: grid; gap: 2rem; position: sticky; top: 100px;">
+            <!-- Review Form -->
+            <div class="glass-card">
+                <h3 style="margin-bottom: 1.5rem;">✍️ Write a Review</h3>
+                <form id="reviewForm" onsubmit="submitReview(event)">
+                    <div class="form-group">
+                        <label>Your Rating</label>
+                        <div class="star-rating" id="starRating" style="font-size: 1.5rem; cursor: pointer; color: var(--accent); margin-top: 0.5rem;">
+                            <span onclick="setRating(1)">☆</span>
+                            <span onclick="setRating(2)">☆</span>
+                            <span onclick="setRating(3)">☆</span>
+                            <span onclick="setRating(4)">☆</span>
+                            <span onclick="setRating(5)">☆</span>
+                        </div>
+                        <input type="hidden" id="ratingValue" value="0">
+                    </div>
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label>Your Comment</label>
+                        <textarea id="reviewComment" rows="4" placeholder="Share your experience..." style="width: 100%; margin-top: 0.5rem;"></textarea>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 1.5rem;">Submit Review</button>
+                    <div id="reviewError" style="margin-top: 1rem; font-size: 0.9rem; text-align: center;"></div>
+                </form>
+            </div>
+
+            <!-- Booking Promo -->
+            <div class="glass-card" style="border-color: var(--primary-glow); background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--secondary-rgb), 0.1));">
+                <h3 style="margin-bottom: 1rem;">Reserve a Table</h3>
+                <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">Experience the flavors in person. Book your spot today for an unforgettable meal.</p>
+                <button class="btn" style="width: 100%; justify-content: center;">Book Now</button>
+            </div>
         </div>
-    </section>
+    </div>
+</main>
 
-</div>
-
-<footer>© 2025 Dining Guide</footer>
+<footer style="margin-top: 6rem; border-top: 1px solid var(--glass-border); padding: 4rem 0;">
+    <div class="container" style="text-align: center;">
+        <p>© 2025 Dining Guide. Crafted with ❤️ for food lovers.</p>
+    </div>
+</footer>
 
 </body>
 </html>

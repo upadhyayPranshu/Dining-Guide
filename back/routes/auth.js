@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 /* =====================
    SIGNUP
@@ -11,10 +12,16 @@ router.post("/signup", async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
+        // Check if user exists
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ error: "User already exists" });
+        }
+
         // hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = new User({
+        user = new User({
             name,
             email,
             password: hashedPassword
@@ -22,10 +29,21 @@ router.post("/signup", async (req, res) => {
 
         await user.save();
 
-        res.json({ message: "User registered successfully" });
+        // Create JWT
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+
+        res.json({ 
+            message: "User registered successfully", 
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
 
     } catch (error) {
-        res.status(400).json({ error: "User already exists" });
+        res.status(500).json({ error: "Server error during registration" });
     }
 });
 
@@ -36,26 +54,34 @@ router.post("/signup", async (req, res) => {
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    try {
+        const user = await User.findOne({ email });
 
-    if (!user) {
-        return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-        return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    res.json({ 
-        message: "Login successful",
-        user: {
-            id: user._id,
-            name: user.name,
-            email: user.email
+        if (!user) {
+            return res.status(401).json({ error: "Invalid credentials" });
         }
-    });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        // Create JWT
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+
+        res.json({ 
+            message: "Login successful", 
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Server error during login" });
+    }
 });
 
 module.exports = router;

@@ -2,32 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Dining Guide</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
-<body>
+<body class="auth-page">
 
-<div class="container">
-    <div class="card form-card">
-        <h2>Login</h2>
+<div class="glass-card auth-card animate-fade">
+    <a href="index.html" class="logo" style="justify-content: center; margin-bottom: 2rem;">🍽 Dining Guide</a>
+    <h2>Welcome Back</h2>
+    
+    <form onsubmit="validateLogin(event)">
+        <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" placeholder="name@example.com" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+        </div>
 
-        <form onsubmit="validateLogin(event)">
-            <label>Email</label>
-            <input type="email" id="login-email" placeholder="you@example.com">
+        <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 1rem;">
+            Sign In
+        </button>
 
-            <label>Password</label>
-            <input type="password" id="login-password" placeholder="Enter password">
+        <p id="login-error" style="text-align: center; font-size: 0.9rem;"></p>
+    </form>
 
-            <br><br>
-            <button type="submit">Login</button>
-        </form>
-
-        <!-- ERROR MESSAGE -->
-        <div id="login-error"></div>
-
-        <p><br>New user? <a href="signup.html">Create an account</a></p>
-    </div>
+    <p style="text-align: center; margin-top: 2rem; color: var(--text-muted);">
+        Don't have an account? <a href="signup.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Create one</a>
+    </p>
 </div>
 
 </body>
