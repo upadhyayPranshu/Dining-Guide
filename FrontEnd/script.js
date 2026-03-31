@@ -2,7 +2,7 @@
    DINING GUIDE - CORE LOGIC
    ===================================================== */
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://dining-guide-production.up.railway.app/api";
 
 // ---------------------- AUTH PROTECTION ----------------------
 document.addEventListener("DOMContentLoaded", () => {
