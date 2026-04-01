@@ -656,23 +656,27 @@ function updateProgressBars(data) {
 
     const cper = document.getElementById("caloriesPercent");
     const pper = document.getElementById("proteinPercent");
+    const cbper = document.getElementById("carbsPercent");
+    const fper = document.getElementById("fatsPercent");
     if (cper) cper.textContent = Math.round(calPercent) + "%";
     if (pper) pper.textContent = Math.round(protPercent) + "%";
+    if (cbper) cbper.textContent = Math.round(carbPercent) + "%";
+    if (fper) fper.textContent = Math.round(fatPercent) + "%";
 }
 
-async function addMeal(event) {
+async function logMeal(event) {
     event.preventDefault();
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
 
-    const name = document.getElementById("mealName").value.trim();
-    const calories = parseInt(document.getElementById("mealCalories").value);
-    const protein = parseInt(document.getElementById("mealProtein").value) || 0;
-    const carbs = parseInt(document.getElementById("mealCarbs").value) || 0;
-    const fats = parseInt(document.getElementById("mealFats").value) || 0;
-    const type = document.getElementById("mealType").value;
+    const foodName = document.getElementById("foodName").value.trim();
+    const calories = parseInt(document.getElementById("inputCalories").value);
+    const protein = parseInt(document.getElementById("inputProtein").value) || 0;
+    const carbs = parseInt(document.getElementById("inputCarbs").value) || 0;
+    const fats = parseInt(document.getElementById("inputFats").value) || 0;
+    const mealType = document.getElementById("mealType").value;
 
-    if (!name || isNaN(calories)) return;
+    if (!foodName || isNaN(calories)) return;
 
     try {
         const response = await fetch(`${API_BASE}/nutrition`, {
@@ -684,17 +688,20 @@ async function addMeal(event) {
             body: JSON.stringify({
                 userId,
                 date: selectedDate,
-                name,
-                calories,
-                protein,
-                carbs,
-                fats,
-                type
+                foodName,
+                mealType,
+                nutrition: {
+                    calories,
+                    protein,
+                    carbs,
+                    fats,
+                    fiber: 0
+                }
             })
         });
 
         if (response.ok) {
-            document.getElementById("addMealForm").reset();
+            document.getElementById("mealForm").reset();
             loadNutritionData();
         }
     } catch (err) {
@@ -716,20 +723,27 @@ async function deleteMeal(mealId) {
 }
 
 function updateMealLists(meals) {
-    const types = ["Breakfast", "Lunch", "Dinner", "Snacks"];
-    types.forEach(type => {
-        const list = document.getElementById(type.toLowerCase() + "List");
+    if (!meals) return;
+    const typeToListId = {
+        "Breakfast": "breakfastList",
+        "Lunch": "lunchList",
+        "Dinner": "dinnerList",
+        "Snack": "snackList"
+    };
+
+    Object.entries(typeToListId).forEach(([type, listId]) => {
+        const list = document.getElementById(listId);
         if (!list) return;
 
-        const filtered = meals.filter(m => m.type === type);
-        if (filtered.length === 0) {
+        const items = meals[type] || [];
+        if (items.length === 0) {
             list.innerHTML = `<p class="empty-meal">No ${type.toLowerCase()} logged</p>`;
         } else {
-            list.innerHTML = filtered.map(m => `
+            list.innerHTML = items.map(m => `
                 <div class="meal-item">
                     <div class="meal-item-info">
-                        <strong>${m.name}</strong>
-                        <span>${m.calories} cal | P: ${m.protein}g C: ${m.carbs}g F: ${m.fats}g</span>
+                        <strong>${m.foodName}</strong>
+                        <span>${m.nutrition.calories} cal | P: ${m.nutrition.protein}g C: ${m.nutrition.carbs}g F: ${m.nutrition.fats}g</span>
                     </div>
                     <button class="delete-btn" onclick="deleteMeal('${m._id}')">×</button>
                 </div>
