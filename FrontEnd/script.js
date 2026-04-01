@@ -165,12 +165,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
 
             if (filtered.length === 0) {
-                list.innerHTML = `<div class="glass-card animate-fade" style="grid-column: 1/-1">No restaurants found matching your criteria.</div>`;
+                list.innerHTML = `<div class="glass-card animate-fade" style="grid-column: 1/-1; text-align: center; padding: 3rem;"><p>No restaurants found matching your criteria.</p></div>`;
                 return;
             }
 
+            const defaultImg = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80';
+
             for(const r of filtered) {
-                // Check favorite status for each restaurant
                 let isFav = false;
                 if (userId) {
                     try {
@@ -185,17 +186,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const card = document.createElement("div");
                 card.className = "glass-card restaurant-card animate-fade";
                 card.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div>
-                            <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${r.name}</h3>
-                            <p style="color: var(--text-muted)">${r.cuisine} • Rating: ${"⭐".repeat(r.rating)}</p>
-                        </div>
-                        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleRestaurantFavorite('${r._id}', this)" style="font-size: 1.5rem;">
-                            ${isFav ? '❤️' : '♡'}
-                        </button>
+                    <div class="card-image">
+                        <img src="${r.image || defaultImg}" alt="${r.name}" loading="lazy">
+                        <span class="cuisine-badge">${r.cuisine}</span>
                     </div>
-                    <div style="margin-top: 1.5rem">
-                        <a href="details.html?id=${r._id}" class="btn" style="width: 100%; justify-content: center;">View Details</a>
+                    <div class="card-body">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <h3 style="font-size: 1.35rem; margin-bottom: 0.3rem; color: var(--white);">${r.name}</h3>
+                                    <p style="color: var(--text-muted); font-size: 0.9rem;">${"⭐".repeat(r.rating)} • ${r.address || ''}</p>
+                                </div>
+                                <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleRestaurantFavorite('${r._id}', this)">
+                                    ${isFav ? '❤️' : '♡'}
+                                </button>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1.25rem">
+                            <a href="details.html?id=${r._id}" class="btn" style="width: 100%;">View Details</a>
+                        </div>
                     </div>
                 `;
                 list.appendChild(card);
@@ -304,6 +313,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("restHours").textContent = rest.hours || "11:00 AM - 10:00 PM";
         document.title = rest.name + " - Dining Guide";
 
+        // Set restaurant hero image
+        const restImg = document.getElementById("restImage");
+        if (restImg && rest.image) {
+            restImg.src = rest.image;
+            restImg.alt = rest.name;
+        }
+
         // Load Menu, Reviews, Favorites
         await loadMenuItems();
         await loadReviews();
@@ -337,14 +353,19 @@ async function loadMenuItems() {
         menuList.innerHTML = items.map(item => `
             <div class="menu-item animate-fade">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                    <h4 style="font-size: 1.25rem;">${item.name} ${item.isVegetarian ? '🌱' : ''}</h4>
-                    <span style="font-weight: 700; color: var(--primary);">₹${item.price || '-'}</span>
+                    <div>
+                        <span class="category-badge">${item.category || 'Main Course'}</span>
+                        ${item.isVegetarian ? '<span class="veg-badge">🌱 Veg</span>' : ''}
+                        <h4 style="font-size: 1.2rem; margin-top: 0.4rem; color: var(--white);">${item.name}</h4>
+                    </div>
+                    <span style="font-weight: 700; color: var(--primary); font-size: 1.1rem; white-space: nowrap;">₹${item.price || '-'}</span>
                 </div>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">${item.description || ''}</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem; line-height: 1.5;">${item.description || ''}</p>
                 <div class="nutrition-info">
-                    <span style="background: rgba(var(--primary-rgb), 0.1); padding: 0.25rem 0.5rem; border-radius: 4px;">🔥 ${item.nutrition.calories} cal</span>
-                    <span style="background: rgba(var(--secondary-rgb), 0.1); padding: 0.25rem 0.5rem; border-radius: 4px;">🥩 ${item.nutrition.protein}g</span>
-                    <span style="background: rgba(255, 100, 100, 0.1); padding: 0.25rem 0.5rem; border-radius: 4px;">🍞 ${item.nutrition.carbs}g</span>
+                    <span style="background: rgba(var(--primary-rgb), 0.12);">🔥 ${item.nutrition.calories} cal</span>
+                    <span style="background: rgba(var(--secondary-rgb), 0.12);">🥩 ${item.nutrition.protein}g protein</span>
+                    <span style="background: rgba(var(--accent-rgb), 0.12);">🍞 ${item.nutrition.carbs}g carbs</span>
+                    <span style="background: rgba(var(--success-rgb), 0.12);">🧈 ${item.nutrition.fats}g fats</span>
                 </div>
             </div>
         `).join("");
@@ -542,20 +563,27 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        const defaultImg = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80';
         favoritesList.innerHTML = favorites.map(fav => {
             const rest = fav.restaurantId;
             if (!rest) return "";
             return `
                 <div class="glass-card restaurant-card animate-fade">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div>
-                            <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${rest.name}</h3>
-                            <p style="color: var(--text-muted)">${rest.cuisine} • ⭐${rest.rating}</p>
-                        </div>
-                        <button class="fav-btn active" onclick="removeFavorite('${rest._id}', this)" style="font-size: 1.5rem;">❤️</button>
+                    <div class="card-image">
+                        <img src="${rest.image || defaultImg}" alt="${rest.name}" loading="lazy">
+                        <span class="cuisine-badge">${rest.cuisine}</span>
                     </div>
-                    <div style="margin-top: 1.5rem">
-                        <a href="details.html?id=${rest._id}" class="btn" style="width: 100%; justify-content: center;">View Details</a>
+                    <div class="card-body">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h3 style="font-size: 1.35rem; margin-bottom: 0.3rem; color: var(--white);">${rest.name}</h3>
+                                <p style="color: var(--text-muted); font-size: 0.9rem;">${"⭐".repeat(rest.rating)}</p>
+                            </div>
+                            <button class="fav-btn active" onclick="removeFavorite('${rest._id}', this)">❤️</button>
+                        </div>
+                        <div style="margin-top: 1.25rem">
+                            <a href="details.html?id=${rest._id}" class="btn" style="width: 100%;">View Details</a>
+                        </div>
                     </div>
                 </div>
             `;

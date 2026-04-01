@@ -2,85 +2,92 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Nutrition Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Tracker | Dining Guide</title>
+    <meta name="description" content="Track your daily nutrition intake. Log meals, monitor calories, protein, carbs and fats.">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body>
 
-<header>
+<header class="scrolled">
     <div class="container">
         <nav>
-            <h1>🥗 Nutrition Tracker</h1>
-            <div>
+            <a href="index.html" class="logo">🍽 Dining Guide</a>
+            <div class="nav-links">
                 <a href="restaurants.html">Restaurants</a>
                 <a href="favorites.html">Favorites</a>
-                <button onclick="logout()" class="btn btn-sm">Logout</button>
+                <button onclick="logout()" class="btn btn-outline btn-sm">Logout</button>
             </div>
         </nav>
     </div>
 </header>
 
-<div class="container">
+<main class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <!-- PAGE HEADER -->
+    <div class="animate-fade" style="margin-bottom: 1rem;">
+        <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.25rem;">🥗 Nutrition Tracker</h1>
+        <p style="color: var(--text-muted);">Monitor your daily intake and hit your nutrition goals</p>
+    </div>
 
     <!-- DATE SELECTOR -->
-    <section class="date-section">
-        <button class="btn btn-outline" onclick="changeDate(-1)">← Prev</button>
+    <section class="date-section animate-fade">
+        <button class="btn btn-outline btn-sm" onclick="changeDate(-1)">← Prev</button>
         <h2 id="currentDate"></h2>
-        <button class="btn btn-outline" onclick="changeDate(1)">Next →</button>
+        <button class="btn btn-outline btn-sm" onclick="changeDate(1)">Next →</button>
     </section>
 
     <!-- DAILY SUMMARY -->
-    <section class="nutrition-summary">
+    <section class="nutrition-summary animate-fade" style="animation-delay: 0.1s">
         <div class="card summary-card">
-            <div class="summary-icon">🔥</div>
+            <span class="summary-icon">🔥</span>
             <h3 id="totalCalories">0</h3>
             <p>Calories</p>
         </div>
         <div class="card summary-card">
-            <div class="summary-icon">🥩</div>
+            <span class="summary-icon">🥩</span>
             <h3 id="totalProtein">0g</h3>
             <p>Protein</p>
         </div>
         <div class="card summary-card">
-            <div class="summary-icon">🍞</div>
+            <span class="summary-icon">🍞</span>
             <h3 id="totalCarbs">0g</h3>
             <p>Carbs</p>
         </div>
         <div class="card summary-card">
-            <div class="summary-icon">🧈</div>
+            <span class="summary-icon">🧈</span>
             <h3 id="totalFats">0g</h3>
             <p>Fats</p>
         </div>
     </section>
 
     <!-- PROGRESS BARS -->
-    <section class="card">
-        <h2>Daily Progress</h2>
+    <section class="card animate-fade" style="animation-delay: 0.2s; margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 0.5rem; font-size: 1.3rem;">Daily Progress</h2>
         <div class="progress-container">
             <div class="progress-item">
-                <span>Calories (2000 goal)</span>
+                <span>Calories (2000)</span>
                 <div class="progress-bar">
                     <div class="progress-fill" id="caloriesProgress"></div>
                 </div>
                 <span id="caloriesPercent">0%</span>
             </div>
             <div class="progress-item">
-                <span>Protein (50g goal)</span>
+                <span>Protein (50g)</span>
                 <div class="progress-bar">
                     <div class="progress-fill protein" id="proteinProgress"></div>
                 </div>
                 <span id="proteinPercent">0%</span>
             </div>
             <div class="progress-item">
-                <span>Carbs (250g goal)</span>
+                <span>Carbs (250g)</span>
                 <div class="progress-bar">
                     <div class="progress-fill carbs" id="carbsProgress"></div>
                 </div>
                 <span id="carbsPercent">0%</span>
             </div>
             <div class="progress-item">
-                <span>Fats (65g goal)</span>
+                <span>Fats (65g)</span>
                 <div class="progress-bar">
                     <div class="progress-fill fats" id="fatsProgress"></div>
                 </div>
@@ -90,8 +97,8 @@
     </section>
 
     <!-- LOG MEAL FORM -->
-    <section class="card">
-        <h2>Log a Meal</h2>
+    <section class="card animate-fade" style="animation-delay: 0.3s; margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 1.25rem; font-size: 1.3rem;">➕ Log a Meal</h2>
         <form id="mealForm" onsubmit="logMeal(event)">
             <div class="form-grid">
                 <div>
@@ -126,14 +133,13 @@
                     <input type="number" id="inputFats" placeholder="0" min="0" required>
                 </div>
             </div>
-            <br>
-            <button type="submit">+ Add Meal</button>
+            <button type="submit" class="btn" style="width: 100%; margin-top: 0.5rem;">+ Add Meal</button>
         </form>
     </section>
 
     <!-- MEALS LIST BY TYPE -->
-    <section>
-        <h2>Today's Meals</h2>
+    <section class="animate-fade" style="animation-delay: 0.4s">
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Today's Meals</h2>
         
         <div class="meal-section">
             <h3>🌅 Breakfast</h3>
@@ -155,10 +161,17 @@
             <div id="snackList" class="meals-list"></div>
         </div>
     </section>
+</main>
 
-</div>
-
-<footer>© 2025 Dining Guide</footer>
+<footer>
+    <div class="container">
+        <div class="footer-links">
+            <a href="restaurants.html">Restaurants</a>
+            <a href="favorites.html">Favorites</a>
+        </div>
+        <p>© 2025 Dining Guide. Crafted with ❤️ for food lovers.</p>
+    </div>
+</footer>
 
 </body>
 </html>

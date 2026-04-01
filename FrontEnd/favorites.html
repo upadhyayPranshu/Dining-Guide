@@ -2,46 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Favorites</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Favorites | Dining Guide</title>
+    <meta name="description" content="Your saved favorite restaurants for quick access.">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body>
 
-<header>
+<header class="scrolled">
     <div class="container">
         <nav>
-            <h1>❤️ My Favorites</h1>
-            <div>
+            <a href="index.html" class="logo">🍽 Dining Guide</a>
+            <div class="nav-links">
                 <a href="restaurants.html">Restaurants</a>
                 <a href="nutrition.html">Nutrition</a>
-                <button onclick="logout()" class="btn btn-sm">Logout</button>
+                <button onclick="logout()" class="btn btn-outline btn-sm">Logout</button>
             </div>
         </nav>
     </div>
 </header>
 
-<div class="container">
-
-    <section>
-        <p>Your favorite restaurants saved for quick access</p>
-    </section>
+<main class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <div class="animate-fade" style="margin-bottom: 1rem;">
+        <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.25rem;">❤️ My Favorites</h1>
+        <p style="color: var(--text-muted);">Your favorite restaurants saved for quick access</p>
+    </div>
 
     <!-- FAVORITES LIST -->
-    <section class="grid" id="favoritesList">
+    <div class="grid animate-fade" id="favoritesList" style="animation-delay: 0.2s">
         <!-- Loaded from backend -->
-    </section>
+    </div>
 
-    <section id="noFavorites" class="card" style="display: none; text-align: center;">
+    <div id="noFavorites" class="card empty-state" style="display: none;">
+        <div class="empty-icon">💔</div>
         <h3>No favorites yet</h3>
-        <p>Browse restaurants and click the ❤️ to save them here</p>
-        <br>
-        <a href="restaurants.html" class="btn">Browse Restaurants</a>
-    </section>
+        <p>Browse restaurants and tap the heart to save your favorites here</p>
+        <a href="restaurants.html" class="btn">Browse Restaurants →</a>
+    </div>
+</main>
 
-</div>
-
-<footer>© 2025 Dining Guide</footer>
+<footer>
+    <div class="container">
+        <div class="footer-links">
+            <a href="restaurants.html">Restaurants</a>
+            <a href="nutrition.html">Nutrition</a>
+        </div>
+        <p>© 2025 Dining Guide. Crafted with ❤️ for food lovers.</p>
+    </div>
+</footer>
 
 </body>
 </html>

@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Dining Guide</title>
+    <meta name="description" content="Sign in to your Dining Guide account.">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body class="auth-page">
 
 <div class="glass-card auth-card animate-fade">
-    <a href="index.html" class="logo" style="justify-content: center; margin-bottom: 2rem;">🍽 Dining Guide</a>
+    <a href="index.html" class="logo" style="justify-content: center; margin-bottom: 2rem; font-size: 2rem;">🍽 Dining Guide</a>
     <h2>Welcome Back</h2>
+    <p class="auth-subtitle">Sign in to continue your culinary journey</p>
     
     <form onsubmit="validateLogin(event)">
         <div class="form-group">
@@ -24,15 +26,15 @@
             <input type="password" id="login-password" placeholder="••••••••" required>
         </div>
 
-        <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 1rem;">
-            Sign In
+        <button type="submit" class="btn" style="width: 100%; margin-top: 0.5rem; padding: 1rem;">
+            Sign In →
         </button>
 
-        <p id="login-error" style="text-align: center; font-size: 0.9rem;"></p>
+        <p id="login-error" style="text-align: center; font-size: 0.9rem; margin-top: 1rem;"></p>
     </form>
 
     <p style="text-align: center; margin-top: 2rem; color: var(--text-muted);">
-        Don't have an account? <a href="signup.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Create one</a>
+        Don't have an account? <a href="signup.html" style="color: var(--primary); font-weight: 600;">Create one</a>
     </p>
 </div>
 

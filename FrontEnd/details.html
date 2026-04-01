@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant Details | Dining Guide</title>
+    <meta name="description" content="View restaurant menu, nutrition info, and customer reviews.">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
@@ -14,19 +15,23 @@
         <nav>
             <a href="index.html" class="logo">🍽 Dining Guide</a>
             <div class="nav-links">
-                <button id="favoriteBtn" class="btn btn-outline" onclick="toggleFavorite()">
+                <button id="favoriteBtn" class="btn btn-outline btn-sm" onclick="toggleFavorite()">
                     <span id="favoriteIcon">♡</span> Favorite
                 </button>
-                <a href="restaurants.html" class="btn">Back to List</a>
+                <a href="restaurants.html" class="btn btn-sm">← Back</a>
             </div>
         </nav>
     </div>
 </header>
 
-<main class="container animate-fade" id="restaurantDetails">
-    <div style="margin-bottom: 3rem; margin-top: 3rem;">
-        <h1 id="restName" style="font-size: 3.5rem; margin-bottom: 0.5rem;">Loading...</h1>
-        <p style="font-size: 1.25rem; color: var(--text-muted)">
+<main class="container animate-fade" id="restaurantDetails" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <!-- RESTAURANT HERO -->
+    <div id="restHero" style="margin-bottom: 2rem;">
+        <div class="hero-image" style="max-width: 100%; margin: 0 0 2rem;">
+            <img id="restImage" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80" alt="Restaurant" style="height: 280px;">
+        </div>
+        <h1 id="restName" style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem;">Loading...</h1>
+        <p style="font-size: 1.2rem; color: var(--text-muted)">
             <span id="restCuisine">Cuisine</span> • <span id="restRating">⭐⭐⭐⭐</span>
         </p>
     </div>
@@ -35,16 +40,16 @@
         <div style="display: grid; gap: 2rem;">
             <!-- Info Card -->
             <div class="glass-card">
-                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
                     <div>
                         <h3 style="margin-bottom: 1rem; color: var(--primary);">Quick Info</h3>
-                        <p><strong>🕒 Hours:</strong> <span id="restHours">Loading...</span></p>
-                        <p style="margin-top: 0.5rem;"><strong>📍 Address:</strong> <br><span id="restAddress">Loading...</span></p>
+                        <p style="margin-bottom: 0.5rem;"><strong>🕒 Hours:</strong> <span id="restHours">Loading...</span></p>
+                        <p><strong>📍 Address:</strong> <br><span id="restAddress">Loading...</span></p>
                     </div>
                     <div style="text-align: right;">
                         <h3 style="margin-bottom: 1rem;">Average Rating</h3>
                         <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);" id="avgRating">0</div>
-                        <div style="color: var(--accent);" id="avgStars">☆☆☆☆☆</div>
+                        <div style="color: var(--accent); font-size: 1.25rem;" id="avgStars">☆☆☆☆☆</div>
                         <p id="reviewCount" style="font-size: 0.9rem; color: var(--text-muted);">0 reviews</p>
                     </div>
                 </div>
@@ -52,35 +57,39 @@
 
             <!-- Menu Section -->
             <div class="glass-card">
-                <h2 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">📋 Our Menu</h2>
-                <div id="menuList" class="menu-grid" style="display: grid; gap: 1.5rem;">
+                <h2 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.75rem; font-size: 1.5rem;">📋 Our Menu</h2>
+                <div id="menuList" class="menu-grid" style="display: grid; gap: 1rem;">
                     <!-- Menu items loaded here -->
                 </div>
-                <div id="noMenu" style="display: none; padding: 2rem; text-align: center;">
-                    <p>No menu items available yet.</p>
+                <div id="noMenu" class="empty-state" style="display: none; padding: 2rem;">
+                    <div class="empty-icon">📋</div>
+                    <h3>No menu yet</h3>
+                    <p>Menu items will appear here soon</p>
                 </div>
             </div>
 
             <!-- Reviews List -->
             <div class="glass-card">
-                <h2 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">💬 Customer Reviews</h2>
-                <div id="reviewsList" style="display: grid; gap: 1.5rem;">
+                <h2 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.75rem; font-size: 1.5rem;">💬 Customer Reviews</h2>
+                <div id="reviewsList" style="display: grid; gap: 1rem;">
                     <!-- Reviews loaded here -->
                 </div>
-                <div id="noReviews" style="display: none; padding: 2rem; text-align: center;">
-                    <p>No reviews yet. Be the first to share your experience!</p>
+                <div id="noReviews" class="empty-state" style="display: none; padding: 2rem;">
+                    <div class="empty-icon">💬</div>
+                    <h3>No reviews yet</h3>
+                    <p>Be the first to share your experience!</p>
                 </div>
             </div>
         </div>
 
-        <div style="display: grid; gap: 2rem; position: sticky; top: 100px;">
+        <div style="display: grid; gap: 2rem; position: sticky; top: 80px;">
             <!-- Review Form -->
             <div class="glass-card">
                 <h3 style="margin-bottom: 1.5rem;">✍️ Write a Review</h3>
                 <form id="reviewForm" onsubmit="submitReview(event)">
                     <div class="form-group">
                         <label>Your Rating</label>
-                        <div class="star-rating" id="starRating" style="font-size: 1.5rem; cursor: pointer; color: var(--accent); margin-top: 0.5rem;">
+                        <div class="star-rating" id="starRating" style="margin-top: 0.5rem;">
                             <span onclick="setRating(1)">☆</span>
                             <span onclick="setRating(2)">☆</span>
                             <span onclick="setRating(3)">☆</span>
@@ -89,27 +98,32 @@
                         </div>
                         <input type="hidden" id="ratingValue" value="0">
                     </div>
-                    <div class="form-group" style="margin-top: 1.5rem;">
+                    <div class="form-group" style="margin-top: 1rem;">
                         <label>Your Comment</label>
-                        <textarea id="reviewComment" rows="4" placeholder="Share your experience..." style="width: 100%; margin-top: 0.5rem;"></textarea>
+                        <textarea id="reviewComment" rows="4" placeholder="Share your experience..." style="margin-top: 0.5rem;"></textarea>
                     </div>
-                    <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 1.5rem;">Submit Review</button>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">Submit Review</button>
                     <div id="reviewError" style="margin-top: 1rem; font-size: 0.9rem; text-align: center;"></div>
                 </form>
             </div>
 
             <!-- Booking Promo -->
-            <div class="glass-card" style="border-color: var(--primary-glow); background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--secondary-rgb), 0.1));">
-                <h3 style="margin-bottom: 1rem;">Reserve a Table</h3>
-                <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">Experience the flavors in person. Book your spot today for an unforgettable meal.</p>
-                <button class="btn" style="width: 100%; justify-content: center;">Book Now</button>
+            <div class="glass-card" style="border-color: rgba(var(--primary-rgb), 0.3); background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.08), rgba(var(--secondary-rgb), 0.08));">
+                <h3 style="margin-bottom: 0.75rem;">🍽️ Reserve a Table</h3>
+                <p style="margin-bottom: 1.25rem; color: var(--text-muted); font-size: 0.95rem;">Experience the flavors in person. Book your spot today.</p>
+                <button class="btn" style="width: 100%;">Book Now</button>
             </div>
         </div>
     </div>
 </main>
 
-<footer style="margin-top: 6rem; border-top: 1px solid var(--glass-border); padding: 4rem 0;">
-    <div class="container" style="text-align: center;">
+<footer>
+    <div class="container">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="restaurants.html">Restaurants</a>
+            <a href="nutrition.html">Nutrition</a>
+        </div>
         <p>© 2025 Dining Guide. Crafted with ❤️ for food lovers.</p>
     </div>
 </footer>

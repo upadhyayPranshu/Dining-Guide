@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find Restaurants | Dining Guide</title>
+    <meta name="description" content="Explore restaurants by cuisine, rating, and more.">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
@@ -16,32 +17,35 @@
             <div class="nav-links">
                 <a href="nutrition.html">Nutrition</a>
                 <a href="favorites.html">Favorites</a>
-                <button onclick="logout()" class="btn btn-outline">Logout</button>
+                <button onclick="logout()" class="btn btn-outline btn-sm">Logout</button>
             </div>
         </nav>
     </div>
 </header>
 
-<main class="container">
+<main class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
     <section class="animate-fade">
-        <h2 style="font-size: 2.5rem; margin-bottom: 2rem; margin-top: 2rem;">Explore Restaurants</h2>
+        <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.25rem;">Explore Restaurants</h1>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Find the perfect dining spot for every occasion</p>
         
-        <div class="glass-card" style="margin-bottom: 3rem;">
+        <div class="glass-card" style="margin-bottom: 2rem;">
             <div class="filter-group">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search by name or cuisine..." style="max-width: 400px;">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search by name or cuisine..." style="max-width: 400px; border-radius: 50px;">
                 
                 <select id="cuisineFilter">
                     <option value="">All Cuisines</option>
-                    <option value="Indian">Indian</option>
-                    <option value="Chinese">Chinese</option>
-                    <option value="Italian">Italian</option>
-                    <option value="Mexican">Mexican</option>
-                    <option value="Japanese">Japanese</option>
-                    <option value="American">American</option>
+                    <option value="Indian">🇮🇳 Indian</option>
+                    <option value="Chinese">🇨🇳 Chinese</option>
+                    <option value="Italian">🇮🇹 Italian</option>
+                    <option value="Mexican">🇲🇽 Mexican</option>
+                    <option value="Japanese">🇯🇵 Japanese</option>
+                    <option value="American">🇺🇸 American</option>
+                    <option value="French">🇫🇷 French</option>
                 </select>
 
                 <select id="ratingFilter">
                     <option value="">All Ratings</option>
+                    <option value="3">3+ Stars</option>
                     <option value="4">4+ Stars</option>
                     <option value="5">5 Stars</option>
                 </select>
@@ -49,16 +53,20 @@
         </div>
 
         <div class="grid" id="restaurantList">
-            <!-- Dynamically populated by script.js -->
             <div class="glass-card" style="grid-column: 1/-1; text-align: center; padding: 4rem;">
-                <p>Loading the best flavors for you...</p>
+                <p style="color: var(--text-muted);">Loading the best flavors for you...</p>
             </div>
         </div>
     </section>
 </main>
 
-<footer style="margin-top: 6rem; border-top: 1px solid var(--glass-border); padding: 4rem 0;">
-    <div class="container" style="text-align: center;">
+<footer>
+    <div class="container">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="nutrition.html">Nutrition</a>
+            <a href="favorites.html">Favorites</a>
+        </div>
         <p>© 2025 Dining Guide. Crafted with ❤️ for food lovers.</p>
     </div>
 </footer>

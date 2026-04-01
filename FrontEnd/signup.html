@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account | Dining Guide</title>
+    <meta name="description" content="Create your Dining Guide account and start discovering restaurants.">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body class="auth-page">
 
 <div class="glass-card auth-card animate-fade">
-    <a href="index.html" class="logo" style="justify-content: center; margin-bottom: 2rem;">🍽 Dining Guide</a>
+    <a href="index.html" class="logo" style="justify-content: center; margin-bottom: 2rem; font-size: 2rem;">🍽 Dining Guide</a>
     <h2>Join the Journey</h2>
+    <p class="auth-subtitle">Create your account and start exploring flavors</p>
     
     <form onsubmit="validateSignup(event)">
         <div class="form-group">
@@ -24,7 +26,7 @@
             <input type="email" id="signup-email" placeholder="name@example.com" required>
         </div>
         
-        <div class="row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group">
                 <label for="signup-password">Password</label>
                 <input type="password" id="signup-password" placeholder="••••••••" required>
@@ -35,15 +37,15 @@
             </div>
         </div>
 
-        <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 1rem;">
-            Create Account
+        <button type="submit" class="btn" style="width: 100%; margin-top: 0.5rem; padding: 1rem;">
+            Create Account →
         </button>
 
-        <p id="signup-error" style="text-align: center; font-size: 0.9rem;"></p>
+        <p id="signup-error" style="text-align: center; font-size: 0.9rem; margin-top: 1rem;"></p>
     </form>
 
     <p style="text-align: center; margin-top: 2rem; color: var(--text-muted);">
-        Already have an account? <a href="login.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign in</a>
+        Already have an account? <a href="login.html" style="color: var(--primary); font-weight: 600;">Sign in</a>
     </p>
 </div>
 

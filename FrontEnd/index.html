@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dining Guide | Discover Exceptional Flavors</title>
+    <meta name="description" content="Explore the finest dining experiences. Discover restaurants, track nutrition, save favorites, and read reviews.">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
@@ -15,6 +16,7 @@
             <a href="index.html" class="logo">🍽 Dining Guide</a>
             <div class="nav-links">
                 <a href="restaurants.html">Restaurants</a>
+                <a href="nutrition.html">Nutrition</a>
                 <a href="login.html" class="btn btn-outline">Login</a>
                 <a href="signup.html" class="btn">Sign Up</a>
             </div>
@@ -23,9 +25,10 @@
 </header>
 
 <main>
+    <!-- HERO -->
     <section class="hero animate-fade">
         <div class="container">
-            <h1>Discover your next <br><span style="color: var(--primary)">favorite meal.</span></h1>
+            <h1>Discover your next <br><span class="gradient-text">favorite meal.</span></h1>
             <p>Explore the finest dining experiences, curated just for you. From street food gems to fine dining excellence.</p>
             
             <div class="search-bar">
@@ -37,84 +40,116 @@
         </div>
     </section>
 
-    <section class="container" style="margin-top: 4rem;">
+    <!-- HERO IMAGE -->
+    <div class="container">
+        <div class="hero-image animate-fade" style="animation-delay: 0.3s">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80" alt="Delicious spread of gourmet food">
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <section class="container" style="margin-top: 5rem;">
         <div class="features-grid">
             <div class="card feature-card animate-fade">
-                <div class="feature-icon">🍽</div>
+                <span class="feature-icon">🍽</span>
                 <h3>Browse Restaurants</h3>
                 <p>Discover restaurants by cuisine, rating, or location</p>
             </div>
 
             <div class="card feature-card animate-fade" style="animation-delay: 0.1s">
-                <div class="feature-icon">🥗</div>
+                <span class="feature-icon">🥗</span>
                 <h3>Track Nutrition</h3>
                 <p>Log your meals and monitor daily calories, protein, carbs & fats</p>
             </div>
 
             <div class="card feature-card animate-fade" style="animation-delay: 0.2s">
-                <div class="feature-icon">❤️</div>
+                <span class="feature-icon">❤️</span>
                 <h3>Save Favorites</h3>
                 <p>Bookmark your favorite restaurants for quick access</p>
             </div>
 
             <div class="card feature-card animate-fade" style="animation-delay: 0.3s">
-                <div class="feature-icon">⭐</div>
+                <span class="feature-icon">⭐</span>
                 <h3>Read Reviews</h3>
                 <p>See what others think and share your own dining experiences</p>
             </div>
         </div>
     </section>
 
-    <section style="text-align: center; margin-top: 4rem;">
-        <a href="signup.html" class="btn btn-large">Get Started</a>
+    <!-- CTA -->
+    <section style="text-align: center; margin-top: 3rem;">
+        <a href="signup.html" class="btn btn-large">Get Started Free →</a>
     </section>
 
+    <!-- TRENDING -->
     <section class="container" style="margin-top: 6rem;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
-            <h2>Trending Now</h2>
-            <a href="restaurants.html" style="color: var(--primary); text-decoration: none; font-weight: 600;">View All →</a>
+        <div class="section-header">
+            <h2>Trending Now 🔥</h2>
+            <a href="restaurants.html">View All →</a>
         </div>
         
         <div class="grid" id="featuredList">
-            <!-- Featured cards can be statically placed or dynamically loaded -->
             <div class="glass-card restaurant-card animate-fade">
-                <div>
-                    <span style="background: var(--accent); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">NEW</span>
-                    <h3 style="margin-top: 1rem; font-size: 1.5rem;">The Golden Grill</h3>
-                    <p>Modern Steakhouse • ⭐⭐⭐⭐⭐</p>
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&q=80" alt="Spice Hub">
+                    <span class="cuisine-badge">Indian</span>
                 </div>
-                <div style="margin-top: 1.5rem">
-                    <a href="restaurants.html" class="btn" style="width: 100%; justify-content: center;">See More</a>
+                <div class="card-body">
+                    <div>
+                        <span class="tag tag-new">NEW</span>
+                        <h3 style="font-size: 1.4rem; margin-top: 0.5rem;">Spice Hub</h3>
+                        <p style="color: var(--text-muted); margin-top: 0.25rem;">⭐⭐⭐⭐ • 123 Curry Lane</p>
+                    </div>
+                    <div style="margin-top: 1.25rem">
+                        <a href="restaurants.html" class="btn" style="width: 100%;">Explore</a>
+                    </div>
                 </div>
             </div>
 
             <div class="glass-card restaurant-card animate-fade" style="animation-delay: 0.2s">
-                <div>
-                    <span style="background: var(--primary); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">POPULAR</span>
-                    <h3 style="margin-top: 1rem; font-size: 1.5rem;">Sushi Zen</h3>
-                    <p>Japanese Fusion • ⭐⭐⭐⭐</p>
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600&q=80" alt="Sushi Zen">
+                    <span class="cuisine-badge">Japanese</span>
                 </div>
-                <div style="margin-top: 1.5rem">
-                    <a href="restaurants.html" class="btn" style="width: 100%; justify-content: center;">See More</a>
+                <div class="card-body">
+                    <div>
+                        <span class="tag tag-popular">POPULAR</span>
+                        <h3 style="font-size: 1.4rem; margin-top: 0.5rem;">Sushi Zen</h3>
+                        <p style="color: var(--text-muted); margin-top: 0.25rem;">⭐⭐⭐⭐⭐ • 456 Sakura Street</p>
+                    </div>
+                    <div style="margin-top: 1.25rem">
+                        <a href="restaurants.html" class="btn" style="width: 100%;">Explore</a>
+                    </div>
                 </div>
             </div>
 
             <div class="glass-card restaurant-card animate-fade" style="animation-delay: 0.4s">
-                <div>
-                    <span style="background: var(--secondary); color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">TOP RATED</span>
-                    <h3 style="margin-top: 1rem; font-size: 1.5rem;">The Pasta Project</h3>
-                    <p>Authentic Italian • ⭐⭐⭐⭐⭐</p>
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Le Bistro">
+                    <span class="cuisine-badge">French</span>
                 </div>
-                <div style="margin-top: 1.5rem">
-                    <a href="restaurants.html" class="btn" style="width: 100%; justify-content: center;">See More</a>
+                <div class="card-body">
+                    <div>
+                        <span class="tag tag-top">TOP RATED</span>
+                        <h3 style="font-size: 1.4rem; margin-top: 0.5rem;">Le Bistro</h3>
+                        <p style="color: var(--text-muted); margin-top: 0.25rem;">⭐⭐⭐⭐⭐ • 303 Baguette Way</p>
+                    </div>
+                    <div style="margin-top: 1.25rem">
+                        <a href="restaurants.html" class="btn" style="width: 100%;">Explore</a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 </main>
 
-<footer style="margin-top: 6rem; border-top: 1px solid var(--glass-border); padding: 4rem 0;">
-    <div class="container" style="text-align: center;">
+<footer>
+    <div class="container">
+        <div class="footer-links">
+            <a href="restaurants.html">Restaurants</a>
+            <a href="nutrition.html">Nutrition</a>
+            <a href="favorites.html">Favorites</a>
+        </div>
         <p>© 2025 Dining Guide. Crafted with ❤️ for food lovers.</p>
     </div>
 </footer>
