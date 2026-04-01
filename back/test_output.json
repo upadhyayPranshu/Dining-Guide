@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "69cce03ab2e373b8779eedbb",
+    "userId": "69cce038b2e373b8779eedb7",
+    "restaurantId": {
+      "_id": "69ccc5940266675939898336",
+      "name": "Spice Hub",
+      "cuisine": "Indian",
+      "address": "123 Curry Lane, Food City",
+      "image": "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&q=80"
+    },
+    "name": "Tester",
+    "date": "2025-10-10",
+    "time": "19:00",
+    "guests": "2",
+    "status": "Confirmed",
+    "createdAt": "2026-04-01T09:07:06.811Z",
+    "__v": 0
+  }
+]

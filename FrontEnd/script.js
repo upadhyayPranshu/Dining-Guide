@@ -6,7 +6,13 @@ const API_BASE = "https://dining-guide-production.up.railway.app/api";
 
 // ---------------------- AUTH PROTECTION ----------------------
 document.addEventListener("DOMContentLoaded", () => {
-    const protectedPages = ["restaurants.html", "details.html", "nutrition.html", "favorites.html"];
+    const protectedPages = [
+        "restaurants.html", "restaurants",
+        "details.html", "details",
+        "nutrition.html", "nutrition",
+        "favorites.html", "favorites",
+        "bookings.html", "bookings"
+    ];
     const currentPage = window.location.pathname.split("/").pop();
 
     if (protectedPages.includes(currentPage)) {
@@ -890,7 +896,7 @@ async function submitBooking(event) {
 // ---------------------- MY BOOKINGS PAGE ----------------------
 document.addEventListener("DOMContentLoaded", () => {
     const currentPage = window.location.pathname.split("/").pop();
-    if (currentPage === "bookings.html") {
+    if (currentPage === "bookings.html" || currentPage === "bookings") {
         loadBookings();
     }
 });
