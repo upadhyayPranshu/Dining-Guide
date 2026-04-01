@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Favorites | Dining Guide</title>
-    <meta name="description" content="Your saved favorite restaurants for quick access.">
+    <title>My Bookings | Dining Guide</title>
+    <meta name="description" content="View your upcoming and past restaurant reservations.">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
@@ -17,7 +17,8 @@
             <div class="nav-links">
                 <a href="restaurants.html">Restaurants</a>
                 <a href="nutrition.html">Nutrition</a>
-                <a href="bookings.html">Bookings</a>
+                <a href="favorites.html">Favorites</a>
+                <a href="bookings.html" class="active" style="color: var(--primary);">Bookings</a>
                 <button onclick="logout()" class="btn btn-outline btn-sm">Logout</button>
             </div>
         </nav>
@@ -26,28 +27,31 @@
 
 <main class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
     <div class="animate-fade" style="margin-bottom: 1rem;">
-        <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.25rem;">❤️ My Favorites</h1>
-        <p style="color: var(--text-muted);">Your favorite restaurants saved for quick access</p>
+        <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.25rem;">📅 My Bookings</h1>
+        <p style="color: var(--text-muted);">Manage your upcoming and past dining reservations</p>
     </div>
 
-    <!-- FAVORITES LIST -->
-    <div class="grid animate-fade" id="favoritesList" style="animation-delay: 0.2s">
+    <!-- BOOKINGS LIST -->
+    <div class="grid animate-fade" id="bookingsList" style="animation-delay: 0.2s; margin-top: 2rem;">
         <!-- Loaded from backend -->
     </div>
 
-    <div id="noFavorites" class="card empty-state" style="display: none;">
-        <div class="empty-icon">💔</div>
-        <h3>No favorites yet</h3>
-        <p>Browse restaurants and tap the heart to save your favorites here</p>
-        <a href="restaurants.html" class="btn">Browse Restaurants →</a>
+    <div id="noBookings" class="card empty-state" style="display: none; margin-top: 2rem;">
+        <div class="empty-icon">🍽️</div>
+        <h3>No reservations found</h3>
+        <p>You haven't booked any tables yet. Discover great places to dine today!</p>
+        <a href="restaurants.html" class="btn">Find Restaurants →</a>
     </div>
 </main>
 
 <footer>
     <div class="container">
         <div class="footer-links">
+            <a href="index.html">Home</a>
             <a href="restaurants.html">Restaurants</a>
             <a href="nutrition.html">Nutrition</a>
+            <a href="favorites.html">Favorites</a>
+            <a href="bookings.html">Bookings</a>
         </div>
         <p>© 2025 Dining Guide. Crafted with ❤️ for food lovers.</p>
     </div>

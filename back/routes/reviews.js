@@ -18,7 +18,7 @@ router.get("/restaurant/:restaurantId", async (req, res) => {
 router.get("/rating/:restaurantId", async (req, res) => {
     try {
         const result = await Review.aggregate([
-            { $match: { restaurantId: require("mongoose").Types.ObjectId(req.params.restaurantId) } },
+            { $match: { restaurantId: new (require("mongoose").Types.ObjectId)(req.params.restaurantId) } },
             { $group: { _id: null, avgRating: { $avg: "$rating" }, count: { $sum: 1 } } }
         ]);
         

@@ -20,6 +20,7 @@ app.use("/api/menu-items", require("./routes/menuItems"));
 app.use("/api/nutrition", require("./routes/nutrition"));
 app.use("/api/favorites", require("./routes/favorites"));
 app.use("/api/reviews", require("./routes/reviews"));
+app.use("/api/bookings", require("./routes/bookings"));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

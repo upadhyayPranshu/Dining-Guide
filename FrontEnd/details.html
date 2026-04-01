@@ -18,6 +18,7 @@
                 <button id="favoriteBtn" class="btn btn-outline btn-sm" onclick="toggleFavorite()">
                     <span id="favoriteIcon">♡</span> Favorite
                 </button>
+                <a href="bookings.html" style="margin-right: 1rem;">Bookings</a>
                 <a href="restaurants.html" class="btn btn-sm">← Back</a>
             </div>
         </nav>
@@ -111,11 +112,50 @@
             <div class="glass-card" style="border-color: rgba(var(--primary-rgb), 0.3); background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.08), rgba(var(--secondary-rgb), 0.08));">
                 <h3 style="margin-bottom: 0.75rem;">🍽️ Reserve a Table</h3>
                 <p style="margin-bottom: 1.25rem; color: var(--text-muted); font-size: 0.95rem;">Experience the flavors in person. Book your spot today.</p>
-                <button class="btn" style="width: 100%;">Book Now</button>
+                <button class="btn" style="width: 100%;" onclick="openBookingModal()">Book Now</button>
             </div>
         </div>
     </div>
 </main>
+
+<!-- BOOKING MODAL -->
+<div id="bookingModal" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); align-items:center; justify-content:center;">
+    <div class="glass-card animate-scale" style="max-width:460px; width:90%; position:relative;">
+        <button onclick="closeBookingModal()" style="position:absolute; top:1rem; right:1rem; background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">✕</button>
+        <h2 style="margin-bottom:0.25rem;">🍽️ Reserve a Table</h2>
+        <p style="color:var(--text-muted); margin-bottom:1.5rem; font-size:0.9rem;">at <strong id="bookingRestName"></strong></p>
+        <form id="bookingForm" onsubmit="submitBooking(event)">
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" id="bookingName" placeholder="John Doe" required>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="bookingDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Time</label>
+                    <input type="time" id="bookingTime" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Number of Guests</label>
+                <select id="bookingGuests" required>
+                    <option value="1">1 Guest</option>
+                    <option value="2" selected>2 Guests</option>
+                    <option value="3">3 Guests</option>
+                    <option value="4">4 Guests</option>
+                    <option value="5">5 Guests</option>
+                    <option value="6">6 Guests</option>
+                    <option value="7+">7+ Guests</option>
+                </select>
+            </div>
+            <button type="submit" class="btn" style="width:100%; margin-top:0.5rem; padding:1rem;">Confirm Reservation</button>
+            <div id="bookingMsg" style="margin-top:1rem; text-align:center; font-size:0.9rem;"></div>
+        </form>
+    </div>
+</div>
 
 <footer>
     <div class="container">

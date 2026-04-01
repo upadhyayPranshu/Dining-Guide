@@ -5,32 +5,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    --primary: hsl(245, 75%, 60%);
-    --primary-rgb: 99, 102, 241;
-    --primary-glow: hsla(245, 75%, 60%, 0.4);
-    --secondary: hsl(270, 70%, 60%);
-    --secondary-rgb: 168, 85, 247;
-    --accent: hsl(15, 90%, 65%);
-    --accent-rgb: 239, 119, 68;
-    --success: hsl(142, 71%, 45%);
-    --success-rgb: 34, 197, 94;
-    --background: #0F111A;
-    --surface: rgba(255, 255, 255, 0.04);
-    --surface-light: rgba(255, 255, 255, 0.08);
-    --surface-hover: rgba(255, 255, 255, 0.12);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-border-hover: rgba(255, 255, 255, 0.2);
-    --text: #E2E8F0;
-    --text-muted: #94A3B8;
+    --primary: hsl(250, 85%, 65%);
+    --primary-rgb: 107, 76, 255;
+    --primary-glow: hsla(250, 85%, 65%, 0.5);
+    --secondary: hsl(280, 80%, 60%);
+    --secondary-rgb: 178, 76, 255;
+    --accent: hsl(330, 85%, 60%);
+    --accent-rgb: 255, 76, 150;
+    --success: hsl(150, 75%, 45%);
+    --success-rgb: 24, 201, 100;
+    --background: #090A0F;
+    --surface: rgba(255, 255, 255, 0.03);
+    --surface-light: rgba(255, 255, 255, 0.06);
+    --surface-hover: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-hover: rgba(255, 255, 255, 0.15);
+    --text: #F8FAFC;
+    --text-muted: #A1A1AA;
     --white: #FFFFFF;
-    --radius-sm: 10px;
-    --radius-md: 16px;
-    --radius-lg: 24px;
-    --radius-xl: 32px;
-    --shadow-glow: 0 0 30px var(--primary-glow);
-    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --radius-sm: 12px;
+    --radius-md: 20px;
+    --radius-lg: 28px;
+    --radius-xl: 36px;
+    --shadow-glow: 0 0 40px var(--primary-glow);
+    --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.5);
+    --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-slow: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ---------------------- BASE ---------------------- */
@@ -43,14 +43,34 @@
 body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--background);
-    background-image:
-        radial-gradient(at 0% 0%, hsla(245, 50%, 15%, 0.5) 0, transparent 50%),
-        radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 0.15) 0, transparent 50%),
-        radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 0.15) 0, transparent 50%);
     color: var(--text);
     min-height: 100vh;
     line-height: 1.6;
     overflow-x: hidden;
+}
+
+/* Animated Background Mesh */
+body::before {
+    content: "";
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(ellipse at 20% 20%, hsla(250, 85%, 65%, 0.12) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 80%, hsla(330, 85%, 60%, 0.12) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 20%, hsla(280, 80%, 60%, 0.12) 0%, transparent 40%),
+        radial-gradient(ellipse at 20% 80%, hsla(200, 85%, 65%, 0.12) 0%, transparent 40%);
+    animation: rotateMesh 30s linear infinite;
+    z-index: -1;
+    pointer-events: none;
+}
+
+@keyframes rotateMesh {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
 }
 
 .container {
@@ -247,25 +267,27 @@ nav > div a:hover::after {
     gap: 0.5rem;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    z-index: 1;
 }
 
 .btn::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    background: linear-gradient(135deg, var(--secondary), var(--accent));
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
+    z-index: -1;
 }
 
 .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(var(--primary-rgb), 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.3);
 }
 
 .btn:hover::before { opacity: 1; }
-.btn > * { position: relative; z-index: 1; }
-.btn span, .btn { position: relative; z-index: 1; }
+.btn:active { transform: translateY(0); box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.3); }
 
 .btn-sm {
     padding: 0.5rem 1rem;
@@ -296,16 +318,18 @@ nav > div a:hover::after {
 /* ---------------------- CARDS ---------------------- */
 .glass-card {
     background: var(--surface);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
     padding: 1.75rem;
     transition: var(--transition);
+    box-shadow: var(--shadow-card), inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
 .glass-card:hover {
     border-color: var(--glass-border-hover);
+    background: var(--surface-hover);
 }
 
 .card {
@@ -314,6 +338,7 @@ nav > div a:hover::after {
     border-radius: var(--radius-md);
     padding: 1.75rem;
     transition: var(--transition);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
 /* ---------------------- RESTAURANT CARDS ---------------------- */
@@ -370,17 +395,21 @@ nav > div a:hover::after {
 }
 
 .restaurant-card .card-body {
-    padding: 1.5rem;
+    padding: 1.75rem;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
+.restaurant-card {
+    transition: var(--transition);
+}
+
 .restaurant-card:hover {
-    transform: translateY(-8px);
-    border-color: rgba(var(--primary-rgb), 0.3);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(var(--primary-rgb), 0.1);
+    transform: translateY(-6px);
+    border-color: rgba(var(--primary-rgb), 0.5);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 40px var(--primary-glow);
 }
 
 /* ---------------------- SEARCH ---------------------- */
@@ -426,29 +455,29 @@ nav > div a:hover::after {
     margin-bottom: 2rem;
 }
 
-select, input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
-    background: rgba(0, 0, 0, 0.3);
+select, input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], input[type="time"], textarea {
+    background: rgba(0, 0, 0, 0.4);
     color: var(--text);
     border: 1px solid var(--glass-border);
-    padding: 0.75rem 1rem;
+    padding: 0.85rem 1.15rem;
     border-radius: var(--radius-sm);
     font-family: inherit;
     font-size: 0.95rem;
-    cursor: pointer;
     transition: var(--transition);
 }
 
-select:focus, input:focus {
+select:focus, input:focus, textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
 /* ---------------------- FEATURES GRID ---------------------- */
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
     margin-bottom: 3rem;
 }
 
@@ -459,19 +488,26 @@ select:focus, input:focus {
     transition: var(--transition);
     position: relative;
     overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .feature-card::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05), rgba(var(--secondary-rgb), 0.05));
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--secondary-rgb), 0.1));
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
 }
 
 .feature-card:hover::before { opacity: 1; }
-.feature-card:hover { transform: translateY(-4px); border-color: var(--glass-border-hover); }
+.feature-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(var(--primary-rgb), 0.5);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow);
+}
 
 .feature-icon {
     font-size: 3rem;
@@ -634,13 +670,14 @@ select:focus, input:focus {
     transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     background: linear-gradient(90deg, var(--primary), var(--secondary));
     position: relative;
+    box-shadow: 0 0 10px var(--primary-glow);
 }
 
 .progress-fill::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
     animation: shimmer 2s infinite;
 }
 
@@ -651,14 +688,17 @@ select:focus, input:focus {
 
 .progress-fill.protein {
     background: linear-gradient(90deg, #8b5cf6, #a855f7);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
 }
 
 .progress-fill.carbs {
     background: linear-gradient(90deg, #f59e0b, #eab308);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
 }
 
 .progress-fill.fats {
     background: linear-gradient(90deg, #14b8a6, #06b6d4);
+    box-shadow: 0 0 10px rgba(20, 184, 166, 0.5);
 }
 
 /* Meal Form */

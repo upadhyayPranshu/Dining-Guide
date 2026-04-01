@@ -2,7 +2,7 @@
    DINING GUIDE - CORE LOGIC
    ===================================================== */
 
-const API_BASE = "https://dining-guide-production.up.railway.app/api";
+const API_BASE = "http://localhost:5000/api";
 
 // ---------------------- AUTH PROTECTION ----------------------
 document.addEventListener("DOMContentLoaded", () => {
@@ -779,3 +779,214 @@ function updateMealLists(meals) {
         }
     });
 }
+
+// ---------------------- BOOKING MODAL ----------------------
+function openBookingModal() {
+    const modal = document.getElementById("bookingModal");
+    if (!modal) return;
+
+    // Set restaurant name in modal
+    const restName = document.getElementById("restName");
+    const bookingRestName = document.getElementById("bookingRestName");
+    if (restName && bookingRestName) {
+        bookingRestName.textContent = restName.textContent;
+    }
+
+    // Set minimum date to today
+    const dateInput = document.getElementById("bookingDate");
+    if (dateInput) {
+        dateInput.min = getTodayDate();
+        dateInput.value = getTodayDate();
+    }
+
+    // Set default time
+    const timeInput = document.getElementById("bookingTime");
+    if (timeInput) timeInput.value = "19:00";
+
+    // Clear previous messages
+    const msg = document.getElementById("bookingMsg");
+    if (msg) msg.textContent = "";
+
+    modal.style.display = "flex";
+}
+
+function closeBookingModal() {
+    const modal = document.getElementById("bookingModal");
+    if (modal) modal.style.display = "none";
+}
+
+async function submitBooking(event) {
+    event.preventDefault();
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    
+    if (!token || !userId) {
+        alert("Please login to book a table");
+        return;
+    }
+
+    const name = document.getElementById("bookingName").value.trim();
+    const date = document.getElementById("bookingDate").value;
+    const time = document.getElementById("bookingTime").value;
+    const guests = document.getElementById("bookingGuests").value;
+    
+    if (!name || !date || !time || !currentRestaurantId) return;
+
+    const msg = document.getElementById("bookingMsg");
+    if (msg) msg.textContent = "Processing...";
+
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
+    try {
+        const response = await fetch(`${API_BASE}/bookings`, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` 
+            },
+            body: JSON.stringify({
+                userId,
+                restaurantId: currentRestaurantId,
+                name,
+                date,
+                time,
+                guests
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            if (msg) {
+                msg.style.color = "#4ade80";
+                msg.innerHTML = `✅ ${data.message} See you on ${new Date(date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at ${time}, ${name}!`;
+            }
+            document.getElementById("bookingForm").reset();
+            const dateInput = document.getElementById("bookingDate");
+            if (dateInput) dateInput.min = getTodayDate();
+            
+            setTimeout(() => {
+                closeBookingModal();
+                if (submitBtn) submitBtn.disabled = false;
+                if (msg) msg.textContent = "";
+            }, 4000);
+        } else {
+            if (msg) {
+                msg.style.color = "var(--accent)";
+                msg.textContent = `❌ ${data.error || "Failed to book"}`;
+            }
+            if (submitBtn) submitBtn.disabled = false;
+        }
+    } catch (err) {
+        if (msg) {
+            msg.style.color = "var(--accent)";
+            msg.textContent = "❌ Connection error";
+        }
+        if (submitBtn) submitBtn.disabled = false;
+    }
+}
+
+// ---------------------- MY BOOKINGS PAGE ----------------------
+document.addEventListener("DOMContentLoaded", () => {
+    const currentPage = window.location.pathname.split("/").pop();
+    if (currentPage === "bookings.html") {
+        loadBookings();
+    }
+});
+
+async function loadBookings() {
+    const list = document.getElementById("bookingsList");
+    const noBookings = document.getElementById("noBookings");
+    if (!list) return;
+
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+
+    try {
+        const response = await fetch(`${API_BASE}/bookings/user/${userId}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const bookings = await response.json();
+
+        if (!bookings || bookings.length === 0) {
+            list.style.display = "none";
+            if (noBookings) noBookings.style.display = "block";
+            return;
+        }
+
+        list.style.display = "grid";
+        if (noBookings) noBookings.style.display = "none";
+
+        const defaultImg = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80';
+        
+        list.innerHTML = bookings.map(b => {
+            const rest = b.restaurantId;
+            if (!rest) return "";
+            
+            const isCancelled = b.status === 'Cancelled';
+            const statusColor = isCancelled ? 'var(--accent)' : 'var(--success)';
+            
+            return `
+                <div class="glass-card restaurant-card animate-fade" style="opacity: ${isCancelled ? '0.7' : '1'}">
+                    <div class="card-image" style="height: 140px;">
+                        <img src="${rest.image || defaultImg}" alt="${rest.name}" loading="lazy">
+                        <span class="cuisine-badge" style="background: ${statusColor}">${b.status}</span>
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <h3 style="font-size: 1.35rem; margin-bottom: 0.3rem; color: var(--white);">${rest.name}</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">${rest.address || ''}</p>
+                            
+                            <div style="margin-top: 1rem; background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 8px;">
+                                <p style="margin-bottom: 0.25rem;">📅 <strong>Date:</strong> ${new Date(b.date).toLocaleDateString()}</p>
+                                <p style="margin-bottom: 0.25rem;">⏰ <strong>Time:</strong> ${b.time}</p>
+                                <p style="margin-bottom: 0.25rem;">👥 <strong>Guests:</strong> ${b.guests}</p>
+                                <p>👤 <strong>Name:</strong> ${b.name}</p>
+                            </div>
+                        </div>
+                        
+                        ${!isCancelled ? `
+                        <div style="margin-top: 1.25rem">
+                            <button onclick="cancelBooking('${b._id}')" class="btn btn-outline" style="width: 100%; border-color: var(--accent); color: var(--accent);">Cancel Booking</button>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }).join("");
+    } catch (err) {
+        list.innerHTML = "<p>Unable to load bookings</p>";
+    }
+}
+
+async function cancelBooking(bookingId) {
+    if (!confirm("Are you sure you want to cancel this reservation?")) return;
+    
+    const token = localStorage.getItem("token");
+    try {
+        const res = await fetch(`${API_BASE}/bookings/${bookingId}`, {
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        
+        if (res.ok) {
+            loadBookings(); // reload the list
+        } else {
+            alert("Failed to cancel booking");
+        }
+    } catch (err) {
+        alert("Error cancelling booking");
+    }
+}
+
+// Close modal on Esc key or clicking outside
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeBookingModal();
+});
+
+document.addEventListener("click", (e) => {
+    const modal = document.getElementById("bookingModal");
+    if (e.target === modal) closeBookingModal();
+});
